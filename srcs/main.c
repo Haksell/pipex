@@ -6,11 +6,25 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/10 06:34:07 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/10 08:04:46 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+static void	error3(char *s1, char *s2, char *s3)
+{
+	char	*error_message;
+
+	error_message = ft_strjoin3(s1, s2, s3);
+	if (error_message == NULL)
+	{
+		perror("malloc");
+		return ;
+	}
+	ft_putendl_fd(error_message, STDERR_FILENO);
+	free(error_message);
+}
 
 static void	panic(char *error, t_data *data, char **cmd_argv)
 {
@@ -24,22 +38,20 @@ static void	panic(char *error, t_data *data, char **cmd_argv)
 
 static void	execute(t_data *data, char **cmd_argv)
 {
-	const pid_t	pid = fork();
-	char		*command;
-	char		*error;
+	pid_t	pid;
+	char	*command;
 
+	command = find_absolute_path(data->path, cmd_argv[0]);
+	if (command == NULL)
+	{
+		error3("pipex: ", cmd_argv[0], ": command not found");
+		return ;
+	}
+	pid = fork();
 	if (pid < 0)
 		panic("fork", data, cmd_argv);
 	if (pid > 0)
 		return ;
-	command = find_absolute_path(data->path, cmd_argv[0]);
-	if (command == NULL)
-	{
-		error = ft_strjoin3("pipex: ", cmd_argv[0], ": command not found");
-		ft_putendl_fd(error, STDERR_FILENO);
-		free(error);
-		return ;
-	}
 	if (data->pipes[0].is_open)
 	{
 		close(data->pipes[0].fds[1]);
