@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/10 08:04:46 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/10 08:23:39 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	error3(char *s1, char *s2, char *s3)
 		perror("malloc");
 		return ;
 	}
-	ft_putendl_fd(error_message, STDERR_FILENO);
+	ft_putstr_fd(error_message, STDERR_FILENO);
 	free(error_message);
 }
 
@@ -44,7 +44,7 @@ static void	execute(t_data *data, char **cmd_argv)
 	command = find_absolute_path(data->path, cmd_argv[0]);
 	if (command == NULL)
 	{
-		error3("pipex: ", cmd_argv[0], ": command not found");
+		error3("pipex: ", cmd_argv[0], ": command not found\n");
 		return ;
 	}
 	pid = fork();
@@ -60,7 +60,8 @@ static void	execute(t_data *data, char **cmd_argv)
 	if (data->pipes[1].is_open)
 		dup2(data->pipes[1].fds[1], STDOUT_FILENO);
 	execve(command, cmd_argv, data->env);
-	panic("execve", data, cmd_argv);
+	error3("pipex: ", cmd_argv[0], ": ");
+	panic(NULL, data, cmd_argv);
 }
 
 int	main(int argc, char **argv, char **env)
