@@ -6,23 +6,22 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 06:11:36 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:50:27 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:56:16 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-// TODO accept t_data *
-bool	check_args(int argc, char **argv, bool *is_heredoc, int *num_children)
+bool	check_args(t_data *data)
 {
-	const bool	is_bonus = ft_endswith(argv[0], "_bonus");
+	const bool	is_bonus = ft_endswith(data->argv[0], "_bonus");
 
-	*is_heredoc = (is_bonus && ft_strcmp(argv[1], "here_doc") == 0);
-	*num_children = argc - 3 - *is_heredoc;
-	if (is_bonus && *num_children < 2)
-		return (error_usage(argv[0], USAGE_BONUS));
-	else if (!is_bonus && *num_children != 2)
-		return (error_usage(argv[0], USAGE_MANDATORY));
+	data->is_heredoc = (is_bonus && ft_strcmp(data->argv[1], "here_doc") == 0);
+	data->num_children = data->argc - 3 - data->is_heredoc;
+	if (is_bonus && data->num_children < 2)
+		return (error_usage(data->argv[0], USAGE_BONUS));
+	else if (!is_bonus && data->num_children != 2)
+		return (error_usage(data->argv[0], USAGE_MANDATORY));
 	return (true);
 }
 
