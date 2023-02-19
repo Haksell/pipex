@@ -6,21 +6,11 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:03:02 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:17:01 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-// int	pipe_exec()
-// {
-
-// }
-
-// int	last_exec()
-// {
-
-// }
 
 int	execute(char *cmd_name, char **env, char **path)
 {
@@ -38,6 +28,36 @@ int	execute(char *cmd_name, char **env, char **path)
 	ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
 	free(full_path);
 	return (EXIT_FAILURE);
+}
+
+void	pipe_exec(pid_t pid, int **pipes, int *fd_in, char **argv, bool is_heredoc, char **env, char **path, int i)
+{
+	if (pid == 0)
+	{
+		ft_close(&pipes[i][0]);
+		dup2(pipes[i][1], STDOUT_FILENO);
+		ft_close(&pipes[i][1]);
+		dup2(*fd_in, STDIN_FILENO);
+		ft_close(fd_in);
+		exit(execute(argv[i + 2 + is_heredoc], env, path));
+	}
+	ft_close(&pipes[i][1]);
+	*fd_in = pipes[i][0];
+}
+
+void	last_exec(pid_t pid, int **pipes, int fd_out, char **argv, bool is_heredoc, char **env, char **path, int i, int num_children)
+{
+	if (pid == 0)
+	{
+		ft_close(&pipes[i - 1][1]);
+		dup2(pipes[i - 1][0], STDIN_FILENO);
+		dup2(fd_out, STDOUT_FILENO);
+		exit(execute(argv[i + 2 + is_heredoc], env, path));
+	}
+	clean_pipes(pipes, num_children - 1);
+	ft_free_double_pointer((void ***)&path, SIZE_MAX);
+	while (waitpid(-1, NULL, 0) != -1)
+		;
 }
 
 int	main(int argc, char **argv, char **env)
@@ -66,33 +86,9 @@ int	main(int argc, char **argv, char **env)
 		if (pid == -1)
 			return (perror("fork"), EXIT_FAILURE);
 		if (i < num_children - 1)
-		{
-			if (pid == 0)
-			{
-				ft_close(&pipes[i][0]);
-				dup2(pipes[i][1], STDOUT_FILENO);
-				ft_close(&pipes[i][1]);
-				dup2(fd_in, STDIN_FILENO);
-				ft_close(&fd_in);
-				return (execute(argv[i + 2 + is_heredoc], env, path));
-			}
-			ft_close(&pipes[i][1]);
-			fd_in = pipes[i][0];
-		}
+			pipe_exec(pid, pipes, &fd_in, argv, is_heredoc, env, path, i);
 		else
-		{
-			if (pid == 0)
-			{
-				ft_close(&pipes[i - 1][1]);
-				dup2(pipes[i - 1][0], STDIN_FILENO);
-				dup2(fd_out, STDOUT_FILENO);
-				return (execute(argv[i + 2 + is_heredoc], env, path));
-			}
-			clean_pipes(pipes, num_children - 1);
-			ft_free_double_pointer((void ***)&path, SIZE_MAX);
-			while (waitpid(-1, NULL, 0) != -1)
-				;
-		}
+			last_exec(pid, pipes, fd_out, argv, is_heredoc, env, path, i, num_children);
 		++i;
 	}
 	return (EXIT_SUCCESS);
