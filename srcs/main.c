@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 09:38:02 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 09:42:29 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,11 @@ int	pipe_exec(pid_t pid, int **pipes, int i, int *fd_in, char **argv, bool is_he
 	return (EXIT_SUCCESS);
 }
 
-int last_exec(pid_t pid, int **pipes, int i, int *fd_in, char **argv, bool is_heredoc, char **path, char **env)
+int last_exec(pid_t pid, int **pipes, int i, int fd_out, char **argv, bool is_heredoc, char **path, char **env, int num_children)
 {
+	char	**cmd_argv;
+	char	*full_path;
+
 	if (pid == 0)
 	{
 		ft_close(&pipes[i - 1][1]);
@@ -64,6 +67,7 @@ int last_exec(pid_t pid, int **pipes, int i, int *fd_in, char **argv, bool is_he
 		while (waitpid(-1, NULL, 0) != -1)
 			;
 	}
+	return (EXIT_SUCCESS);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -74,8 +78,6 @@ int	main(int argc, char **argv, char **env)
 	int		**pipes;
 	int		i;
 	pid_t	pid;
-	char	**cmd_argv;
-	char	*full_path;
 	int		fd_in;
 	int		fd_out;
 
@@ -93,10 +95,10 @@ int	main(int argc, char **argv, char **env)
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), EXIT_FAILURE);
-		if (i < num_children - 1)
+		else if (i < num_children - 1)
 			pipe_exec(pid, pipes, i, &fd_in, argv, is_heredoc, path, env);
 		else
-			last_exec(pid, pipes, i, &fd_in, argv, is_heredoc, path, env);
+			last_exec(pid, pipes, i, fd_out, argv, is_heredoc, path, env, num_children);
 		++i;
 	}
 	return (EXIT_SUCCESS);
