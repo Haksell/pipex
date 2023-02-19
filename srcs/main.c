@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 08:46:31 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 08:49:38 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	main(int argc, char **argv, char **env)
 				return (perror_custom(cmd_argv[0], ": ", "command not found",
 						RET_NOT_FOUND));
 			execve(full_path, cmd_argv, env);
-			return (perror("execve"), EXIT_FAILURE);
+			return (perror("execve"), free(full_path), EXIT_FAILURE);
 		}
 		if (i < num_children - 1)
 		{
