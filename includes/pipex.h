@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/10 18:49:44 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 06:12:05 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,10 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define USAGE_MANDATORY "Usage: ./pipex infile cmd1 cmd2 outfile"
-# define USAGE_BONUS_1 "Usage: ./pipex_bonus (\"here_doc\" delimiter | infile)"
-# define USAGE_BONUS_2 " cmd1 ... cmdn outfile"
-
 # define COMMAND_NOT_FOUND 127
 
-typedef struct s_pipe {
-	int		fds[2];
-	bool	is_open;
-}	t_pipe;
-
-typedef struct s_data {
-	char	**env;
-	char	**path;
-	t_pipe	pipes[2];
-}	t_data;
-
-// path.c
+bool	check_args(int argc, char **argv, bool *is_heredoc, int *num_children);
 char	*find_absolute_path(char **path, char *command);
 char	**get_path(char **env);
-
-// pipes.c
-void	clean_pipe(t_pipe *pipe);
-void	init_pipes(t_pipe pipes[2]);
-void	swap_pipes(t_pipe pipes[2]);
 
 #endif

@@ -6,112 +6,40 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/10 19:31:07 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 06:11:57 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	error3(char *s1, char *s2, char *s3)
+void	display_path(char **path)
 {
-	char	*error_message;
+	int	i;
 
-	error_message = ft_strjoin3(s1, s2, s3);
-	if (error_message == NULL)
+	if (path == NULL)
 	{
-		perror("malloc");
+		ft_printf("PATH is NULL.\n");
 		return ;
 	}
-	ft_putstr_fd(error_message, STDERR_FILENO);
-	free(error_message);
-}
-
-static void	panic(char *error, t_data *data, char **cmd_argv)
-{
-	perror(error);
-	ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
-	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
-	clean_pipe(&data->pipes[0]);
-	clean_pipe(&data->pipes[1]);
-	exit(EXIT_FAILURE);
-}
-
-static pid_t	execute(t_data *data, char **cmd_argv)
-{
-	pid_t	pid;
-	char	*command;
-
-	command = find_absolute_path(data->path, cmd_argv[0]);
-	if (command == NULL)
+	i = 0;
+	while (path[i] != NULL)
 	{
-		error3("pipex: ", cmd_argv[0], ": command not found\n");
-		return (-COMMAND_NOT_FOUND); // TODO return 127 that makes sense somehow
+		puts(path[i]);
+		++i;
 	}
-	pid = fork();
-	if (pid < 0)
-		panic("fork", data, cmd_argv);
-	if (pid > 0)
-		return (pid);
-	if (data->pipes[0].is_open)
-	{
-		close(data->pipes[0].fds[1]);
-		dup2(data->pipes[0].fds[0], STDIN_FILENO);
-	}
-	if (data->pipes[1].is_open)
-		dup2(data->pipes[1].fds[1], STDOUT_FILENO);
-	execve(command, cmd_argv, data->env);
-	error3("pipex: ", cmd_argv[0], ": ");
-	panic(NULL, data, cmd_argv);
-	return (-1);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	t_data	data;
-	int		i;
-	char	**cmd_argv;
-	pid_t	pid_last = -1;
-	int		return_value;
+	char	**path;
+	int		num_children;
+	bool	is_heredoc;
 
-	data.env = env;
-	data.path = get_path(env);
-	init_pipes(data.pipes);
-	i = 1;
-	while (i < argc)
-	{
-		swap_pipes(data.pipes);
-		if (i != argc - 1)
-		{
-			pipe(data.pipes[1].fds);
-			data.pipes[1].is_open = true;
-		}
-		cmd_argv = ft_split(argv[i], ' ');
-		if (i == argc - 1)
-		{
-			pid_last = execute(&data, cmd_argv);
-			if (pid_last < 0)
-				return_value = -pid_last;
-		}
-		else
-			execute(&data, cmd_argv);
-		ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
-		if (i != 1)
-			clean_pipe(&data.pipes[0]);
-		++i;
-	}
-	clean_pipe(&data.pipes[0]);
-	clean_pipe(&data.pipes[1]);
-	while (true)
-	{
-		int	child_status;
-		pid_t wpid = waitpid(-1, &child_status, 0);
-		if (wpid == pid_last)
-		{
-			return_value = WEXITSTATUS(child_status);
-			// ft_printf("return_value=%d\n", child_status);
-		}
-		if (wpid == -1)
-			break ;
-	}
-	return (return_value);
+	if (!check_args(argc, argv, &is_heredoc, &num_children))
+		return (EXIT_FAILURE);
+	if (is_heredoc)
+		ft_printf("<HEREDOC>\n");
+	path = get_path(env);
+	display_path(path);
+	return (EXIT_SUCCESS);
 }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/09 16:54:37 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/10 19:31:06 by axbrisse         ###   ########.fr       */
+/*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
+/*   Updated: 2023/02/19 06:12:48 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ char	**get_path(char **env)
 {
 	int	i;
 
+	if (env == NULL)
+		return (NULL);
 	i = 0;
 	while (env[i] != NULL)
 	{

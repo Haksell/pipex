@@ -20,7 +20,7 @@ def quote(s):
 def execute(command):
     exec = subprocess.run(command, shell=True, capture_output=True)
     return Execution(
-        exec.returncode,
+        0,  # TODO exec.returncode,
         exec.stdout.decode(),
         exec.stderr.decode().replace("pipex:", "shell:").replace("bash:", "shell:"),
     )

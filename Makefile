@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 12:42:52 by axbrisse          #+#    #+#              #
-#    Updated: 2023/02/19 05:18:05 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/02/19 05:55:54 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ LIBFT := libft/libft.a
 INCLUDES := -I./includes -I./libft/includes
 HEADER := ./includes/pipex.h
 
-FILES := main path pipes
+FILES := main path
 
 vpath %.c ${PATH_SRCS}
 
