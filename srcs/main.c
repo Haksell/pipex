@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 08:23:22 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 08:46:31 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,15 @@ int	perror_custom(char *s1, char *s2, char *s3, int return_value)
 	return (return_value);
 }
 
-// TODO not ft_perror
-int	ft_perror(char *info, int return_value)
-{
-	char	*full;
+// int	pipe_exec()
+// {
 
-	full = ft_strjoin("pipex: ", info);
-	if (full == NULL)
-		return (perror("malloc"), EXIT_FAILURE);
-	perror(full);
-	free(full);
-	return (return_value);
-}
+// }
+
+// int	last_exec()
+// {
+
+// }
 
 int	main(int argc, char **argv, char **env)
 {
@@ -57,21 +54,13 @@ int	main(int argc, char **argv, char **env)
 	pid_t	pid;
 	char	**cmd_argv;
 	char	*full_path;
-	char	*file_in;
-	char	*file_out;
 	int		fd_in;
 	int		fd_out;
 
 	if (!check_args(argc, argv, &is_heredoc, &num_children))
 		return (EXIT_FAILURE);
-	file_in = argv[1 + is_heredoc];
-	fd_in = open(file_in, O_RDONLY);
-	if (fd_in == -1)
-		return (ft_perror(file_in, EXIT_FAILURE));
-	file_out = argv[argc - 1];
-	fd_out = open(file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd_out == -1)
-		return (ft_perror(file_out, EXIT_FAILURE));
+	if (!init_files(argv[1 + is_heredoc], &fd_in, argv[argc - 1], &fd_out))
+		return (EXIT_FAILURE);
 	pipes = init_pipes(num_children - 1);
 	if (pipes == NULL)
 		return (EXIT_FAILURE);
@@ -108,7 +97,7 @@ int	main(int argc, char **argv, char **env)
 			execve(full_path, cmd_argv, env);
 			return (perror("execve"), EXIT_FAILURE);
 		}
-		if (i != num_children - 1)
+		if (i < num_children - 1)
 		{
 			ft_close(&pipes[i][1]);
 			fd_in = pipes[i][0];
