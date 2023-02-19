@@ -27,11 +27,12 @@ def execute(command):
 
 
 def compare_no_redirection(argv):
-    pipex_command = f"make bonus -s && ./pipex_bonus {' '.join(map(quote, argv))}"
-    bash_command = f"/usr/bin/bash --posix -c -i '{' | '.join(argv)}'"
+    pipex_command = f"make bonus -s && ./pipex_bonus /dev/stdin {' '.join(map(quote, argv))} /dev/stdout"
+    pipes = " | ".join(argv)
+    bash_command = f"/usr/bin/bash --posix -c -i '{pipes}'"
     pipex_exec = execute(pipex_command)
     bash_exec = execute(bash_command)
-    assert pipex_exec == bash_exec, pipex_command
+    assert pipex_exec == bash_exec, pipes
 
 
 def compare_mandatory(argv):

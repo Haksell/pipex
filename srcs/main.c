@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 11:26:35 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 11:33:07 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	main(int argc, char **argv, char **env)
 				if (full_path == NULL)
 					return (error_not_found(cmd_argv[0]));
 				execve(full_path, cmd_argv, env);
-				return (perror("execve"), free(full_path), EXIT_FAILURE);
+				return (error_filename(cmd_argv[0]), free(full_path), EXIT_FAILURE);
 			}
 			ft_close(&pipes[i][1]);
 			fd_in = pipes[i][0];
@@ -84,7 +84,7 @@ int	main(int argc, char **argv, char **env)
 				if (full_path == NULL)
 					return (error_not_found(cmd_argv[0]));
 				execve(full_path, cmd_argv, env);
-				return (perror("execve"), free(full_path), EXIT_FAILURE);
+				return (error_filename(cmd_argv[0]), free(full_path), EXIT_FAILURE);
 			}
 			clean_pipes(pipes, num_children - 1);
 			ft_free_double_pointer((void ***)&path, SIZE_MAX);
