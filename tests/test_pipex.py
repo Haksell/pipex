@@ -64,6 +64,8 @@ def test_absolute_path():
 
 def test_relative():
     compare_no_redirection(["./tests/wesh", "rev"])
+    compare_no_redirection(["./tests/wesh Bonjour", "rev"])
+    compare_no_redirection(["./tests/wesh Bonjour Comment Sa Va ???", "rev"])
 
 
 def test_in_path():

@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:17:01 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:30:43 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,30 @@ void	pipe_exec(pid_t pid, int **pipes, int *fd_in, char **argv, bool is_heredoc,
 	*fd_in = pipes[i][0];
 }
 
-void	last_exec(pid_t pid, int **pipes, int fd_out, char **argv, bool is_heredoc, char **env, char **path, int i, int num_children)
+int	last_exec(pid_t pid, int **pipes, int fd_out, char **argv, bool is_heredoc, char **env, char **path, int num_children)
 {
+	pid_t	wpid;
+	int		return_value;
+	int		wstatus;
+
 	if (pid == 0)
 	{
-		ft_close(&pipes[i - 1][1]);
-		dup2(pipes[i - 1][0], STDIN_FILENO);
+		ft_close(&pipes[num_children - 2][1]);
+		dup2(pipes[num_children - 2][0], STDIN_FILENO);
 		dup2(fd_out, STDOUT_FILENO);
-		exit(execute(argv[i + 2 + is_heredoc], env, path));
+		exit(execute(argv[num_children + 1 + is_heredoc], env, path));
 	}
 	clean_pipes(pipes, num_children - 1);
 	ft_free_double_pointer((void ***)&path, SIZE_MAX);
-	while (waitpid(-1, NULL, 0) != -1)
-		;
+	while (true)
+	{
+		wpid = waitpid(-1, &wstatus, 0); // TODO wait
+		if (wpid == -1)
+			break ;
+		if (wpid == pid)
+			return_value = WEXITSTATUS(wstatus);
+	}
+	return (return_value);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -85,11 +96,9 @@ int	main(int argc, char **argv, char **env)
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), EXIT_FAILURE);
-		if (i < num_children - 1)
-			pipe_exec(pid, pipes, &fd_in, argv, is_heredoc, env, path, i);
-		else
-			last_exec(pid, pipes, fd_out, argv, is_heredoc, env, path, i, num_children);
+		if (i == num_children - 1)
+			return (last_exec(pid, pipes, fd_out, argv, is_heredoc, env, path, num_children));
+		pipe_exec(pid, pipes, &fd_in, argv, is_heredoc, env, path, i);
 		++i;
 	}
-	return (EXIT_SUCCESS);
 }
