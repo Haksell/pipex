@@ -43,14 +43,6 @@ def compare_no_redirection(argv):
     assert pipex_exec == bash_exec, pipes
 
 
-def compare_mandatory(argv):
-    assert True  # TODO
-
-
-def compare_bonus(argv):
-    assert True  # TODO
-
-
 def test_absolute_path():
     compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev"])
     compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/rev"])
@@ -93,6 +85,9 @@ def test_command_not_found():
     compare_no_redirection(["ls", "lol", "ls"])
     compare_no_redirection(["ls", "lol", "ls", "mdr"])
     compare_no_redirection(["ls", "lol", "ls", "mdr", "ls"])
+    compare_no_redirection(
+        ["ls", "tac", "rev", "ls", "rev", "rev", "rev", "sl", "ls", "rev"]
+    )
 
 
 def test_enoent():
