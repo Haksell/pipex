@@ -56,6 +56,8 @@ def test_basic():
     compare_no_redirection(["ls", "rev", "rev"])
     compare_no_redirection(["ls", "wc", "rev"])
     compare_no_redirection(["ls", "wc", "rev"])
+    compare_no_redirection(["ls", "rev", "tac"])
+    compare_no_redirection(["ls", "rev", "tac", "rev", "tac"])
 
 
 def test_args():
@@ -71,6 +73,9 @@ def test_permission_denied():
 def test_command_not_found():
     compare_no_redirection(["wazaaa", "ls"])
     compare_no_redirection(["ls", "wazaaa"])
+    compare_no_redirection(["ls", "lol", "ls"])
+    compare_no_redirection(["ls", "lol", "ls", "mdr"])
+    compare_no_redirection(["ls", "lol", "ls", "mdr", "ls"])
 
 
 def test_enoent():
@@ -81,9 +86,3 @@ def test_enoent():
 def test_misuse_of_shell_builtin():
     compare_no_redirection(["echo a", "ls -w"])
     compare_no_redirection(["ls -w", "echo a"])
-
-
-def test_bad_commands():
-    compare_no_redirection(["ls", "lol", "ls"])
-    compare_no_redirection(["ls", "lol", "ls", "mdr"])
-    compare_no_redirection(["ls", "lol", "ls", "mdr", "ls"])

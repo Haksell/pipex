@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 11:33:07 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:02:09 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,24 @@
 
 // }
 
+int	execute(char *cmd_name, char **env, char **path)
+{
+	char	**cmd_argv;
+	char	*full_path;
+
+	cmd_argv = ft_split(cmd_name, ' ');
+	if (cmd_argv == NULL)
+		return (perror("malloc"), EXIT_FAILURE);
+	full_path = find_absolute_path(path, cmd_argv[0]);
+	if (full_path == NULL)
+		return (error_not_found(cmd_argv[0]));
+	execve(full_path, cmd_argv, env);
+	error_filename(cmd_argv[0]);
+	ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
+	free(full_path);
+	return (EXIT_FAILURE);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	char	**path;
@@ -30,8 +48,6 @@ int	main(int argc, char **argv, char **env)
 	int		**pipes;
 	int		i;
 	pid_t	pid;
-	char	**cmd_argv;
-	char	*full_path;
 	int		fd_in;
 	int		fd_out;
 
@@ -58,14 +74,7 @@ int	main(int argc, char **argv, char **env)
 				ft_close(&pipes[i][1]);
 				dup2(fd_in, STDIN_FILENO);
 				ft_close(&fd_in);
-				cmd_argv = ft_split(argv[i + 2 + is_heredoc], ' ');
-				if (cmd_argv == NULL)
-					return (perror("malloc"), EXIT_FAILURE);
-				full_path = find_absolute_path(path, cmd_argv[0]);
-				if (full_path == NULL)
-					return (error_not_found(cmd_argv[0]));
-				execve(full_path, cmd_argv, env);
-				return (error_filename(cmd_argv[0]), free(full_path), EXIT_FAILURE);
+				return (execute(argv[i + 2 + is_heredoc], env, path));
 			}
 			ft_close(&pipes[i][1]);
 			fd_in = pipes[i][0];
@@ -77,14 +86,7 @@ int	main(int argc, char **argv, char **env)
 				ft_close(&pipes[i - 1][1]);
 				dup2(pipes[i - 1][0], STDIN_FILENO);
 				dup2(fd_out, STDOUT_FILENO);
-				cmd_argv = ft_split(argv[i + 2 + is_heredoc], ' ');
-				if (cmd_argv == NULL)
-					return (perror("malloc"), EXIT_FAILURE);
-				full_path = find_absolute_path(path, cmd_argv[0]);
-				if (full_path == NULL)
-					return (error_not_found(cmd_argv[0]));
-				execve(full_path, cmd_argv, env);
-				return (error_filename(cmd_argv[0]), free(full_path), EXIT_FAILURE);
+				return (execute(argv[i + 2 + is_heredoc], env, path));
 			}
 			clean_pipes(pipes, num_children - 1);
 			ft_free_double_pointer((void ***)&path, SIZE_MAX);
