@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 09:24:06 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 13:35:11 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*find_absolute_path(char **path, char *command)
 
 	if (ft_strchr(command, '/'))
 		return (ft_strdup(command));
-	if (path == NULL)
+	if (command[0] == '.' || path == NULL)
 		return (NULL);
 	i = 0;
 	while (path[i] != NULL)

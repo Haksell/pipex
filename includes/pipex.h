@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 13:03:20 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 13:57:54 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <unistd.h>
 
 # define RET_NOT_FOUND 127
+# define RET_EXEC_FAIL 126
+
 # define USAGE_MANDATORY "infile cmd1 cmd2 outfile"
 # define USAGE_BONUS "(here_doc delimiter | infile) cmd1 ... cmdn outfile"
 

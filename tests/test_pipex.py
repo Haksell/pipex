@@ -20,7 +20,7 @@ def quote(s):
 def execute(command):
     exec = subprocess.run(command, shell=True, capture_output=True)
     return Execution(
-        0,  # TODO exec.returncode,
+        exec.returncode,
         exec.stdout.decode().strip(),
         "\n".join(
             sorted(
@@ -55,9 +55,10 @@ def test_absolute_path():
 
 
 def test_relative():
-    compare_no_redirection(["./tests/wesh", "rev"])
-    compare_no_redirection(["./tests/wesh Bonjour", "rev"])
-    compare_no_redirection(["./tests/wesh Bonjour Comment Sa Va ???", "rev"])
+    compare_no_redirection(["./tests/shout", "rev"])
+    compare_no_redirection(["./tests/shout Bonjour", "rev"])
+    compare_no_redirection(["./tests/shout Bonjour Comment Sa Va ???", "rev"])
+    compare_no_redirection(["./tests/jexistepas", "rev"])
 
 
 def test_in_path():
@@ -77,6 +78,17 @@ def test_args():
 def test_permission_denied():
     compare_no_redirection(["Makefile", "ls"])
     compare_no_redirection(["ls", "Makefile"])
+    compare_no_redirection(["/dev/null", "rev"])
+    compare_no_redirection(["ls", "/dev/null"])
+
+
+def test_command_is_directory():
+    compare_no_redirection(["..", "rev"])
+    compare_no_redirection(["ls", ".."])
+    compare_no_redirection(["../..", "rev"])
+    compare_no_redirection(["ls", "../.."])
+    compare_no_redirection(["bin", "rev"])
+    compare_no_redirection(["ls", "bin"])
 
 
 def test_command_not_found():
