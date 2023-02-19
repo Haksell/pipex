@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:45:26 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:45:53 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	pipe_exec(t_data *data, pid_t pid, int i)
 		dup2(data->fd_in, STDIN_FILENO);
 		ft_close(&data->fd_in);
 		cmd_name = data->argv[i + 2 + data->is_heredoc];
-		exit(execute(cmd_name, data));
+		exit(execute(data, cmd_name));
 	}
 	ft_close(&data->pipes[i][1]);
 	data->fd_in = data->pipes[i][0];
@@ -61,7 +61,7 @@ int	last_exec(t_data *data, pid_t pid)
 		dup2(data->pipes[data->num_children - 2][0], STDIN_FILENO);
 		dup2(data->fd_out, STDOUT_FILENO);
 		cmd_name = data->argv[data->num_children + 1 + data->is_heredoc];
-		exit(execute(cmd_name, data));
+		exit(execute(data, cmd_name));
 	}
 	clean_pipes(data->pipes, data->num_children - 1);
 	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
