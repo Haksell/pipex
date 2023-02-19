@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_args.c                                       :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 06:11:36 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 09:26:43 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:46:48 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	check_args(int argc, char **argv, bool *is_heredoc, int *num_children)
 	return (true);
 }
 
-bool	init_files(char *file_in, int *fd_in, char *file_out, int *fd_out)
+bool	init_files(char const *file_in, int *fd_in, char const *file_out, int *fd_out)
 {
 	*fd_in = open(file_in, O_RDONLY);
 	if (*fd_in == -1)

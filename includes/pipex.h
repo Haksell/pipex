@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:37:28 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:46:57 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int		error_not_found(char *command);
 bool	error_usage(char *command, char *message);
 char	*find_absolute_path(char **path, char *command);
 char	**get_path(char **env);
-bool	init_files(char *file_in, int *fd_in, char *file_out, int *fd_out);
+bool	init_files(char const *file_in, int *fd_in, char const *file_out, int *fd_out);
 int		**init_pipes(int num_pipes);
 
 #endif
