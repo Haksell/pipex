@@ -6,13 +6,13 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:43:30 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:45:26 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	execute(char *cmd_name, char **env, char **path)
+int	execute(t_data *data, char *cmd_name)
 {
 	char	**cmd_argv;
 	char	*full_path;
@@ -20,10 +20,10 @@ int	execute(char *cmd_name, char **env, char **path)
 	cmd_argv = ft_split(cmd_name, ' ');
 	if (cmd_argv == NULL)
 		return (perror("malloc"), EXIT_FAILURE);
-	full_path = find_absolute_path(path, cmd_argv[0]);
+	full_path = find_absolute_path(data->path, cmd_argv[0]);
 	if (full_path == NULL)
 		return (error_not_found(cmd_argv[0]));
-	execve(full_path, cmd_argv, env);
+	execve(full_path, cmd_argv, data->env);
 	error_filename(cmd_argv[0]);
 	ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
 	free(full_path);
@@ -32,6 +32,8 @@ int	execute(char *cmd_name, char **env, char **path)
 
 void	pipe_exec(t_data *data, pid_t pid, int i)
 {
+	char	*cmd_name;
+
 	if (pid == 0)
 	{
 		ft_close(&data->pipes[i][0]);
@@ -39,7 +41,8 @@ void	pipe_exec(t_data *data, pid_t pid, int i)
 		ft_close(&data->pipes[i][1]);
 		dup2(data->fd_in, STDIN_FILENO);
 		ft_close(&data->fd_in);
-		exit(execute(data->argv[i + 2 + data->is_heredoc], data->env, data->path));
+		cmd_name = data->argv[i + 2 + data->is_heredoc];
+		exit(execute(cmd_name, data));
 	}
 	ft_close(&data->pipes[i][1]);
 	data->fd_in = data->pipes[i][0];
@@ -47,6 +50,7 @@ void	pipe_exec(t_data *data, pid_t pid, int i)
 
 int	last_exec(t_data *data, pid_t pid)
 {
+	char	*cmd_name;
 	pid_t	wpid;
 	int		return_value;
 	int		wstatus;
@@ -56,7 +60,8 @@ int	last_exec(t_data *data, pid_t pid)
 		ft_close(&data->pipes[data->num_children - 2][1]);
 		dup2(data->pipes[data->num_children - 2][0], STDIN_FILENO);
 		dup2(data->fd_out, STDOUT_FILENO);
-		exit(execute(data->argv[data->num_children + 1 + data->is_heredoc], data->env, data->path));
+		cmd_name = data->argv[data->num_children + 1 + data->is_heredoc];
+		exit(execute(cmd_name, data));
 	}
 	clean_pipes(data->pipes, data->num_children - 1);
 	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
