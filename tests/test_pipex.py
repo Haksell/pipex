@@ -51,7 +51,22 @@ def compare_bonus(argv):
     assert True  # TODO
 
 
-def test_basic():
+def test_absolute_path():
+    compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev"])
+    compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/rev"])
+    compare_no_redirection(["/usr/bin/ls", "/usr/bin/wc", "/usr/bin/rev"])
+    compare_no_redirection(["/usr/bin/ls", "/usr/bin/wc", "/usr/bin/rev"])
+    compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/tac"])
+    compare_no_redirection(
+        ["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/tac", "/usr/bin/rev", "/usr/bin/tac"]
+    )
+
+
+def test_relative():
+    compare_no_redirection(["./tests/wesh", "rev"])
+
+
+def test_in_path():
     compare_no_redirection(["ls", "rev"])
     compare_no_redirection(["ls", "rev", "rev"])
     compare_no_redirection(["ls", "wc", "rev"])
