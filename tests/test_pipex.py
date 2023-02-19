@@ -21,8 +21,16 @@ def execute(command):
     exec = subprocess.run(command, shell=True, capture_output=True)
     return Execution(
         0,  # TODO exec.returncode,
-        exec.stdout.decode(),
-        exec.stderr.decode().replace("pipex:", "shell:").replace("bash:", "shell:"),
+        exec.stdout.decode().strip(),
+        "\n".join(
+            sorted(
+                exec.stderr.decode()
+                .strip()
+                .replace("pipex:", "shell:")
+                .replace("bash:", "shell:")
+                .split("\n")
+            )
+        ),
     )
 
 
@@ -73,3 +81,9 @@ def test_enoent():
 def test_misuse_of_shell_builtin():
     compare_no_redirection(["echo a", "ls -w"])
     compare_no_redirection(["ls -w", "echo a"])
+
+
+def test_bad_commands():
+    compare_no_redirection(["ls", "lol", "ls"])
+    compare_no_redirection(["ls", "lol", "ls", "mdr"])
+    compare_no_redirection(["ls", "lol", "ls", "mdr", "ls"])
