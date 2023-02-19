@@ -3,3 +3,4 @@ libft/objs
 libft/libft.a
 pipex
 pipex_bonus
+tests/__pycache__

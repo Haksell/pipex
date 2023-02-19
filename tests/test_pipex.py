@@ -1,5 +1,4 @@
 # TODO test one command
-# TODO test return value
 # TODO test redirection
 # TODO test heredoc
 
@@ -21,30 +20,10 @@ def quote(s):
 def execute(command):
     exec = subprocess.run(command, shell=True, capture_output=True)
     return Execution(
-        -1,  # TODO exec.returncode
+        exec.returncode,
         exec.stdout.decode(),
         exec.stderr.decode().replace("pipex:", "shell:").replace("bash:", "shell:"),
     )
-
-
-def format_error(pipex_command, bash_command, pipex_exec, bash_exec):
-    error = [":(", f"pipex_command={pipex_command}", f"bash_command={bash_command}"]
-    if pipex_exec.returncode != bash_exec.returncode:
-        error.extend(
-            [
-                f"pipex_return={pipex_exec.returncode}",
-                f"bash_return={bash_exec.returncode}",
-            ]
-        )
-    if pipex_exec.stdout != bash_exec.stdout:
-        error.extend(
-            [f"pipex_stdout={pipex_exec.stdout}", f"bash_stdout={bash_exec.stdout}"]
-        )
-    if pipex_exec.stderr != bash_exec.stderr:
-        error.extend(
-            [f"pipex_stderr={pipex_exec.stderr}", f"bash_stderr={bash_exec.stderr}"]
-        )
-    return "\n".join(error)
 
 
 def compare_no_redirection(argv):
@@ -52,9 +31,7 @@ def compare_no_redirection(argv):
     bash_command = f"/usr/bin/bash --posix -c -i '{' | '.join(argv)}'"
     pipex_exec = execute(pipex_command)
     bash_exec = execute(bash_command)
-    assert pipex_exec == bash_exec, format_error(
-        pipex_command, bash_command, pipex_exec, bash_exec
-    )
+    assert pipex_exec == bash_exec, pipex_command
 
 
 def compare_mandatory(argv):
@@ -87,11 +64,11 @@ def test_command_not_found():
     compare_no_redirection(["ls", "wazaaa"])
 
 
-def test_command_not_found():
-    compare_no_redirection(["wazaaa", "ls"])
-    compare_no_redirection(["ls", "wazaaa"])
-
-
 def test_enoent():
     compare_no_redirection(["./qwert", "ls"])
     compare_no_redirection(["ls", "./qwert"])
+
+
+def test_misuse_of_shell_builtin():
+    compare_no_redirection(["echo a", "ls -w"])
+    compare_no_redirection(["ls -w", "echo a"])

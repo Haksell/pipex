@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/10 08:23:39 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/10 19:31:07 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	panic(char *error, t_data *data, char **cmd_argv)
 	exit(EXIT_FAILURE);
 }
 
-static void	execute(t_data *data, char **cmd_argv)
+static pid_t	execute(t_data *data, char **cmd_argv)
 {
 	pid_t	pid;
 	char	*command;
@@ -45,13 +45,13 @@ static void	execute(t_data *data, char **cmd_argv)
 	if (command == NULL)
 	{
 		error3("pipex: ", cmd_argv[0], ": command not found\n");
-		return ;
+		return (-COMMAND_NOT_FOUND); // TODO return 127 that makes sense somehow
 	}
 	pid = fork();
 	if (pid < 0)
 		panic("fork", data, cmd_argv);
 	if (pid > 0)
-		return ;
+		return (pid);
 	if (data->pipes[0].is_open)
 	{
 		close(data->pipes[0].fds[1]);
@@ -62,6 +62,7 @@ static void	execute(t_data *data, char **cmd_argv)
 	execve(command, cmd_argv, data->env);
 	error3("pipex: ", cmd_argv[0], ": ");
 	panic(NULL, data, cmd_argv);
+	return (-1);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -69,6 +70,8 @@ int	main(int argc, char **argv, char **env)
 	t_data	data;
 	int		i;
 	char	**cmd_argv;
+	pid_t	pid_last = -1;
+	int		return_value;
 
 	data.env = env;
 	data.path = get_path(env);
@@ -83,7 +86,14 @@ int	main(int argc, char **argv, char **env)
 			data.pipes[1].is_open = true;
 		}
 		cmd_argv = ft_split(argv[i], ' ');
-		execute(&data, cmd_argv);
+		if (i == argc - 1)
+		{
+			pid_last = execute(&data, cmd_argv);
+			if (pid_last < 0)
+				return_value = -pid_last;
+		}
+		else
+			execute(&data, cmd_argv);
 		ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
 		if (i != 1)
 			clean_pipe(&data.pipes[0]);
@@ -91,7 +101,17 @@ int	main(int argc, char **argv, char **env)
 	}
 	clean_pipe(&data.pipes[0]);
 	clean_pipe(&data.pipes[1]);
-	while (wait(NULL) != -1)
-		;
-	return (EXIT_SUCCESS);
+	while (true)
+	{
+		int	child_status;
+		pid_t wpid = waitpid(-1, &child_status, 0);
+		if (wpid == pid_last)
+		{
+			return_value = WEXITSTATUS(child_status);
+			// ft_printf("return_value=%d\n", child_status);
+		}
+		if (wpid == -1)
+			break ;
+	}
+	return (return_value);
 }

@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/10 06:30:10 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/10 18:49:44 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define USAGE_MANDATORY "Usage: ./pipex infile cmd1 cmd2 outfile"
 # define USAGE_BONUS_1 "Usage: ./pipex_bonus (\"here_doc\" delimiter | infile)"
 # define USAGE_BONUS_2 " cmd1 ... cmdn outfile"
+
+# define COMMAND_NOT_FOUND 127
 
 typedef struct s_pipe {
 	int		fds[2];

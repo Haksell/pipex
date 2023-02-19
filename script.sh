@@ -1,1 +1,0 @@
-0<&- script -qefc "ls --color=auto" /dev/null | cat

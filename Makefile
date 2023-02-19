@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 12:42:52 by axbrisse          #+#    #+#              #
-#    Updated: 2023/02/09 18:50:13 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/02/19 05:18:05 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ ${LIBFT}:
 
 clean:
 	${MAKE} -s -C ${PATH_LIBFT} clean
-	rm -rf ${PATH_OBJS}
+	rm -rf ${PATH_OBJS} .pytest_cache
 
 fclean: clean
 	${MAKE} -s -C ${PATH_LIBFT} fclean
