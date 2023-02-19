@@ -6,12 +6,13 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 06:11:36 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:46:48 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:50:27 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+// TODO accept t_data *
 bool	check_args(int argc, char **argv, bool *is_heredoc, int *num_children)
 {
 	const bool	is_bonus = ft_endswith(argv[0], "_bonus");
@@ -25,13 +26,16 @@ bool	check_args(int argc, char **argv, bool *is_heredoc, int *num_children)
 	return (true);
 }
 
-bool	init_files(char const *file_in, int *fd_in, char const *file_out, int *fd_out)
+bool	init_files(t_data *data)
 {
-	*fd_in = open(file_in, O_RDONLY);
-	if (*fd_in == -1)
+	const char	*file_in = data->argv[1 + data->is_heredoc];
+	const char	*file_out = data->argv[data->argc - 1];
+
+	data->fd_in = open(file_in, O_RDONLY);
+	if (data->fd_in == -1)
 		return (error_filename(file_in));
-	*fd_out = open(file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (*fd_out == -1)
-		return (close(*fd_in), error_filename(file_out));
+	data->fd_out = open(file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (data->fd_out == -1)
+		return (close(data->fd_in), error_filename(file_out));
 	return (true);
 }

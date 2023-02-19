@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:47:57 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:50:40 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,15 +78,12 @@ int	last_exec(t_data *data, pid_t pid)
 
 bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 {
-	const char const	*file_in = argv[1 + data->is_heredoc];
-	const char const	*file_out = argv[argc - 1];
-
 	data->argc = argc;
 	data->argv = argv;
 	data->env = env;
 	if (!check_args(argc, argv, &data->is_heredoc, &data->num_children))
 		return (false);
-	if (!init_files(file_in, &data->fd_in, file_out, &data->fd_out))
+	if (!init_files(data))
 		return (false);
 	data->pipes = init_pipes(data->num_children - 1);
 	if (data->pipes == NULL)

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 09:24:12 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 09:26:14 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:50:56 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-bool	error_filename(char *filename)
+bool	error_filename(char const *filename)
 {
 	char	*full;
 
