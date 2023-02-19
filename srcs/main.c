@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 07:50:47 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 07:56:05 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,14 @@ int	main(int argc, char **argv, char **env)
 		{
 			if (i == 0)
 			{
-				close(pipes[0][0]);
+				ft_close(&pipes[0][0]);
 				dup2(fd_in, STDIN_FILENO);
 				dup2(pipes[0][1], STDOUT_FILENO);
 			}
-			else
+			else if (i == num_children - 1)
 			{
-				close(pipes[0][1]);
-				dup2(pipes[0][0], STDIN_FILENO);
+				ft_close(&pipes[i - 1][1]);
+				dup2(pipes[i - 1][0], STDIN_FILENO);
 				dup2(fd_out, STDOUT_FILENO);
 			}
 			cmd_argv = ft_split(argv[i + 2 + is_heredoc], ' ');
