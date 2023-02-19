@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 09:34:56 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 09:36:36 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,6 @@ int	pipe_exec(pid_t pid, int **pipes, int i, int *fd_in, char **argv, bool is_he
 	return (EXIT_SUCCESS);
 }
 
-// int	last_exec()
-// {
-
-// }
-
 int	main(int argc, char **argv, char **env)
 {
 	char	**path;
@@ -79,20 +74,9 @@ int	main(int argc, char **argv, char **env)
 		{
 			if (pid == 0)
 			{
-				if (i < num_children - 1)
-				{
-					ft_close(&pipes[i][0]);
-					dup2(pipes[i][1], STDOUT_FILENO);
-					ft_close(&pipes[i][1]);
-					dup2(fd_in, STDIN_FILENO);
-					ft_close(&fd_in);
-				}
-				else
-				{
-					ft_close(&pipes[i - 1][1]);
-					dup2(pipes[i - 1][0], STDIN_FILENO);
-					dup2(fd_out, STDOUT_FILENO);
-				}
+				ft_close(&pipes[i - 1][1]);
+				dup2(pipes[i - 1][0], STDIN_FILENO);
+				dup2(fd_out, STDOUT_FILENO);
 				cmd_argv = ft_split(argv[i + 2 + is_heredoc], ' ');
 				if (cmd_argv == NULL)
 					return (perror("malloc"), EXIT_FAILURE);
