@@ -6,33 +6,11 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 08:49:38 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 09:24:02 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-int	perror_custom(char *s1, char *s2, char *s3, int return_value)
-{
-	char	*message;
-	char	*full_error;
-
-	if (s3 != NULL)
-		message = ft_strjoin3(s1, s2, s3);
-	else if (s2 != NULL)
-		message = ft_strjoin(s1, s2);
-	else
-		message = ft_strdup(s1);
-	if (message == NULL)
-		return (perror("malloc"), EXIT_FAILURE);
-	full_error = ft_strjoin3("pipex: ", message, "\n");
-	if (full_error == NULL)
-		return (perror("malloc"), free(message), EXIT_FAILURE);
-	ft_putstr_fd(full_error, STDERR_FILENO);
-	free(message);
-	free(full_error);
-	return (return_value);
-}
 
 // int	pipe_exec()
 // {
@@ -92,8 +70,7 @@ int	main(int argc, char **argv, char **env)
 				return (perror("malloc"), EXIT_FAILURE);
 			full_path = find_absolute_path(path, cmd_argv[0]);
 			if (full_path == NULL)
-				return (perror_custom(cmd_argv[0], ": ", "command not found",
-						RET_NOT_FOUND));
+				return (error_not_found(cmd_argv[0]));
 			execve(full_path, cmd_argv, env);
 			return (perror("execve"), free(full_path), EXIT_FAILURE);
 		}

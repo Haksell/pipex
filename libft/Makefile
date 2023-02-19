@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/20 22:24:32 by axbrisse          #+#    #+#              #
-#    Updated: 2023/02/09 20:46:25 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/02/19 08:55:59 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,6 +79,7 @@ FILES += ft_strdup
 FILES += ft_striteri
 FILES += ft_strjoin
 FILES += ft_strjoin3
+FILES += ft_strjoin_arr
 FILES += ft_strlcat
 FILES += ft_strlcpy
 FILES += ft_strlen
