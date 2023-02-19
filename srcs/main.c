@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:40:30 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/19 12:43:30 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,22 @@ int	execute(char *cmd_name, char **env, char **path)
 	return (EXIT_FAILURE);
 }
 
-void	pipe_exec(pid_t pid, int **pipes, int *fd_in, char **argv, bool is_heredoc, char **env, char **path, int i)
+void	pipe_exec(t_data *data, pid_t pid, int i)
 {
 	if (pid == 0)
 	{
-		ft_close(&pipes[i][0]);
-		dup2(pipes[i][1], STDOUT_FILENO);
-		ft_close(&pipes[i][1]);
-		dup2(*fd_in, STDIN_FILENO);
-		ft_close(fd_in);
-		exit(execute(argv[i + 2 + is_heredoc], env, path));
+		ft_close(&data->pipes[i][0]);
+		dup2(data->pipes[i][1], STDOUT_FILENO);
+		ft_close(&data->pipes[i][1]);
+		dup2(data->fd_in, STDIN_FILENO);
+		ft_close(&data->fd_in);
+		exit(execute(data->argv[i + 2 + data->is_heredoc], data->env, data->path));
 	}
-	ft_close(&pipes[i][1]);
-	*fd_in = pipes[i][0];
+	ft_close(&data->pipes[i][1]);
+	data->fd_in = data->pipes[i][0];
 }
 
-int	last_exec(pid_t pid, int **pipes, int fd_out, char **argv, bool is_heredoc, char **env, char **path, int num_children)
+int	last_exec(t_data *data, pid_t pid)
 {
 	pid_t	wpid;
 	int		return_value;
@@ -53,13 +53,13 @@ int	last_exec(pid_t pid, int **pipes, int fd_out, char **argv, bool is_heredoc, 
 
 	if (pid == 0)
 	{
-		ft_close(&pipes[num_children - 2][1]);
-		dup2(pipes[num_children - 2][0], STDIN_FILENO);
-		dup2(fd_out, STDOUT_FILENO);
-		exit(execute(argv[num_children + 1 + is_heredoc], env, path));
+		ft_close(&data->pipes[data->num_children - 2][1]);
+		dup2(data->pipes[data->num_children - 2][0], STDIN_FILENO);
+		dup2(data->fd_out, STDOUT_FILENO);
+		exit(execute(data->argv[data->num_children + 1 + data->is_heredoc], data->env, data->path));
 	}
-	clean_pipes(pipes, num_children - 1);
-	ft_free_double_pointer((void ***)&path, SIZE_MAX);
+	clean_pipes(data->pipes, data->num_children - 1);
+	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
 	while (true)
 	{
 		wpid = wait(&wstatus);
@@ -102,8 +102,8 @@ int	main(int argc, char **argv, char **env)
 		if (pid == -1)
 			return (perror("fork"), EXIT_FAILURE);
 		if (i == data.num_children - 1)
-			return (last_exec(pid, data.pipes, data.fd_out, data.argv, data.is_heredoc, data.env, data.path, data.num_children));
-		pipe_exec(pid, data.pipes, &data.fd_in, data.argv, data.is_heredoc, data.env, data.path, i);
+			return (last_exec(&data, pid));
+		pipe_exec(&data, pid, i);
 		++i;
 	}
 }
