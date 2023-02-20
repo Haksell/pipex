@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 06:56:31 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:57:03 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	pipe_exec(t_data *data, pid_t pid, int i)
 		exit(execute(data, cmd_name));
 	}
 	ft_close(&data->pipes[i][1]);
+	ft_close(&data->fd_in);
 	data->fd_in = data->pipes[i][0];
 }
 
