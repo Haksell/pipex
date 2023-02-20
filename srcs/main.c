@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 06:17:18 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:35:09 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,14 @@ void	pipe_exec(t_data *data, pid_t pid, int i)
 	data->fd_in = data->pipes[i][0];
 }
 
+int	get_return_value(int wstatus)
+{
+	if (WIFEXITED(wstatus))
+		return (WEXITSTATUS(wstatus));
+	else
+		return (128 + WTERMSIG(wstatus));
+}
+
 int	last_exec(t_data *data, pid_t pid)
 {
 	char	*cmd_name;
@@ -73,7 +81,7 @@ int	last_exec(t_data *data, pid_t pid)
 		if (wpid == -1)
 			break ;
 		if (wpid == pid)
-			return_value = WEXITSTATUS(wstatus);
+			return_value = get_return_value(wstatus);
 	}
 	return (return_value);
 }
