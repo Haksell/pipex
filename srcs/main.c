@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 13:01:58 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 05:56:03 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	execute(t_data *data, char *cmd_name)
 	error_filename(cmd_argv[0]);
 	ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
 	free(full_path);
-	return (EXIT_FAILURE);
+	return (RET_EXEC_FAIL);
 }
 
 void	pipe_exec(t_data *data, pid_t pid, int i)

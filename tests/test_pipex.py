@@ -1,6 +1,7 @@
 # TODO test one command
 # TODO test redirection
 # TODO test heredoc
+# TODO test env -i
 
 from dataclasses import dataclass
 import subprocess
