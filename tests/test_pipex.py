@@ -1,4 +1,5 @@
 # TODO test one command
+# TODO test true return code
 # TODO test redirection
 # TODO test heredoc
 # TODO test env -i
@@ -21,7 +22,7 @@ def quote(s):
 def execute(command):
     exec = subprocess.run(command, shell=True, capture_output=True)
     return Execution(
-        exec.returncode,
+        bool(exec.returncode),  # TODO not bool
         exec.stdout.decode().strip(),
         "\n".join(
             sorted(

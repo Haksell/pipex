@@ -6,13 +6,13 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 09:24:12 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 12:50:56 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:13:12 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-bool	error_filename(char const *filename)
+int	error_filename(char const *filename)
 {
 	char	*full;
 
@@ -24,7 +24,7 @@ bool	error_filename(char const *filename)
 		perror(full);
 		free(full);
 	}
-	return (false);
+	return (RET_BAD_COMMAND);
 }
 
 int	error_not_found(char *command)
@@ -36,7 +36,7 @@ int	error_not_found(char *command)
 		return (perror("malloc"), EXIT_FAILURE);
 	ft_putstr_fd(message, STDERR_FILENO);
 	free(message);
-	return (RET_NOT_FOUND);
+	return (RET_BAD_COMMAND);
 }
 
 bool	error_usage(char *command, char *message)

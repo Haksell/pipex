@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 13:03:09 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:13:44 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ static bool	init_files(t_data *data)
 
 	data->fd_in = open(file_in, O_RDONLY);
 	if (data->fd_in == -1)
-		return (error_filename(file_in));
+		return (error_filename(file_in), false);
 	data->fd_out = open(file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (data->fd_out == -1)
-		return (close(data->fd_in), error_filename(file_out));
+		return (close(data->fd_in), error_filename(file_out), false);
 	return (true);
 }
 
