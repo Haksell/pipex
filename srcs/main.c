@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 06:55:54 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:56:31 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	last_exec(t_data *data, pid_t pid)
 		cmd_name = data->argv[data->num_children + 1 + data->is_heredoc];
 		exit(execute(data, cmd_name));
 	}
+	ft_close(&data->fd_out);
 	clean_pipes(data->pipes, data->num_children - 1);
 	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
 	while (true)
