@@ -6,11 +6,19 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 06:35:09 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:55:54 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+int	get_return_value(int wstatus)
+{
+	if (WIFEXITED(wstatus))
+		return (WEXITSTATUS(wstatus));
+	else
+		return (128 + WTERMSIG(wstatus));
+}
 
 int	execute(t_data *data, char *cmd_name)
 {
@@ -48,14 +56,6 @@ void	pipe_exec(t_data *data, pid_t pid, int i)
 	}
 	ft_close(&data->pipes[i][1]);
 	data->fd_in = data->pipes[i][0];
-}
-
-int	get_return_value(int wstatus)
-{
-	if (WIFEXITED(wstatus))
-		return (WEXITSTATUS(wstatus));
-	else
-		return (128 + WTERMSIG(wstatus));
 }
 
 int	last_exec(t_data *data, pid_t pid)
