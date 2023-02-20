@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 12:42:52 by axbrisse          #+#    #+#              #
-#    Updated: 2023/02/19 13:02:54 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/02/20 07:34:45 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ BONUS := pipex_bonus
 PATH_SRCS := srcs
 PATH_OBJS := objs
 PATH_LIBFT := libft
-PATH_TESTS := tests
 LIBFT := libft/libft.a
 INCLUDES := -I./includes -I./libft/includes
 HEADER := ./includes/pipex.h
@@ -25,10 +24,10 @@ FILES := errors init main path pipes
 
 vpath %.c ${PATH_SRCS}
 
-SRCS = ${addsuffix .c, ${FILES}}
-OBJS = ${patsubst %.c, ${PATH_OBJS}/%.o, ${SRCS}}
+SRCS := ${addsuffix .c, ${FILES}}
+OBJS := ${patsubst %.c, ${PATH_OBJS}/%.o, ${SRCS}}
 
-CC = cc -Wall -Wextra -Werror
+CC := cc -Wall -Wextra -Werror
 
 all: ${NAME}
 
