@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 05:56:33 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:17:25 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,17 @@ char	**get_path(char **env)
 		++i;
 	}
 	return (NULL);
+}
+
+bool	is_executable(char *full_path)
+{
+	bool	return_value;
+	int		fd;
+
+	fd = open(full_path, O_RDONLY);
+	return_value = (fd != -1
+			&& read(fd, NULL, 0) != -1
+			&& access(full_path, X_OK) != -1);
+	ft_close(&fd);
+	return (return_value);
 }

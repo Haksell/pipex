@@ -45,6 +45,10 @@ def compare_no_redirection(argv):
     assert pipex_exec == bash_exec, pipes
 
 
+def test_norminette():
+    assert subprocess.run(["norminette", "includes", "libft", "srcs"]).returncode == 0
+
+
 def test_absolute_path():
     compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev"])
     compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/rev"])

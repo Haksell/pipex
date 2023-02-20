@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 06:13:12 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:17:37 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,6 @@ bool	error_usage(char *command, char *message);
 char	*find_absolute_path(char **path, char *command);
 char	**get_path(char **env);
 bool	init_pipex(t_data *data, int argc, char **argv, char **env);
+bool	is_executable(char *full_path);
 
 #endif

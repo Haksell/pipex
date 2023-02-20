@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 07:27:00 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 13:02:24 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:16:28 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,3 @@ void	clean_pipes(int **pipes, int num_pipes)
 	}
 	ft_free_double_pointer((void ***)&pipes, num_pipes);
 }
-

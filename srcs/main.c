@@ -6,24 +6,11 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 06:15:57 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/02/20 06:17:18 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-bool	is_executable(char *full_path)
-{
-	bool	return_value;
-	int		fd;
-
-	fd = open(full_path, O_RDONLY);
-	return_value = (fd != -1
-			&& read(fd, NULL, 0) != -1
-			&& access(full_path, X_OK) != -1);
-	ft_close(&fd);
-	return (return_value);
-}
 
 int	execute(t_data *data, char *cmd_name)
 {
