@@ -1,32 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_ds_extend_free.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 17:52:27 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/13 17:11:31 by axbrisse         ###   ########.fr       */
+/*   Created: 2023/02/25 23:46:43 by axbrisse          #+#    #+#             */
+/*   Updated: 2023/02/25 23:46:59 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strrchr(const char *s, int c)
+bool	ft_ds_extend_free(t_dynamic_string *buffer, char *s)
 {
-	const unsigned char	uc = (unsigned char)c;
-	size_t				i;
-	char				*ptr;
+	bool	result;
 
-	i = 0;
-	ptr = NULL;
-	while (s[i] != '\0')
-	{
-		if (s[i] == uc)
-			ptr = (char *)(s + i);
-		i++;
-	}
-	if (uc == 0)
-		ptr = (char *)(s + i);
-	return (ptr);
+	if (s == NULL)
+		return (false);
+	result = ft_ds_extend(buffer, s, SIZE_MAX);
+	free(s);
+	return (result);
 }

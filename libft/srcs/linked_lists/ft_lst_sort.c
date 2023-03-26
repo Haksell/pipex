@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 13:39:00 by axbrisse          #+#    #+#             */
-/*   Updated: 2022/12/25 14:00:48 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/01 17:34:58 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,23 @@
 void	ft_lst_sort(t_list *lst, int (*cmp)(void *, void *))
 {
 	const int	size = ft_lstsize(lst);
-	t_list		*cur;
+	t_list		*curr;
 	int			i;
 	void		*tmp;
 
 	i = 1;
 	while (i < size)
 	{
-		cur = lst;
-		while (cur && cur->next)
+		curr = lst;
+		while (curr && curr->next)
 		{
-			if (cmp(cur->content, cur->next->content) > 0)
+			if (cmp(curr->content, curr->next->content) > 0)
 			{
-				tmp = cur->next->content;
-				cur->next->content = cur->content;
-				cur->content = tmp;
+				tmp = curr->next->content;
+				curr->next->content = curr->content;
+				curr->content = tmp;
 			}
-			cur = cur->next;
+			curr = curr->next;
 		}
 		++i;
 	}

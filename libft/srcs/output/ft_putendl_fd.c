@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 14:42:48 by axbrisse          #+#    #+#             */
-/*   Updated: 2022/12/12 08:42:58 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/13 17:09:29 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,13 @@
 
 int	ft_putendl_fd(char *s, int fd)
 {
-	return (ft_putstr_fd(s, fd) + ft_putchar_fd('\n', fd));
+	char	*full;
+	int		written;
+
+	full = ft_strjoin(s, "\n");
+	if (full == NULL)
+		return (-1);
+	written = ft_putstr_fd(full, fd);
+	free(full);
+	return (written);
 }

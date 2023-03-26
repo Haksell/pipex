@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 20:35:04 by axbrisse          #+#    #+#             */
-/*   Updated: 2022/11/09 21:15:34 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/01 06:48:45 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static void	recursive_clear(t_list *lst, void (*del)(void *))
 	if (lst == NULL)
 		return ;
 	recursive_clear(lst->next, del);
-	if (del)
-		del(lst->content);
+	if (del != NULL)
+		del(&lst->content);
 	free(lst);
 }
 

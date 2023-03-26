@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 11:27:39 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/19 08:56:13 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/03 00:32:58 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ typedef struct s_list
 
 typedef struct s_dynamic_string {
 	char	*content;
-	size_t	length;
-	size_t	capacity;
+	int		length;
+	int		capacity;
 }	t_dynamic_string;
 
 // srcs/chars
@@ -63,18 +63,31 @@ void				ft_free_double_pointer(void ***grid, size_t height);
 int					ft_atoi(const char *nptr);
 bool				ft_atoi_safe(char *s, int *n);
 char				*ft_itoa(int n);
+char				*ft_itoa_base(unsigned long n, char *base);
 
 // srcs/dynamic_strings
-bool				ft_ds_append(t_dynamic_string *s1, char c);
+bool				ft_ds_add_nbr(t_dynamic_string *buffer, int n);
+bool				ft_ds_add_nbr_base(
+						t_dynamic_string *buffer, unsigned long n, char *base);
+bool				ft_ds_append(t_dynamic_string *ds, char c);
 bool				ft_ds_extend(t_dynamic_string *s1, char *s2, size_t len2);
+bool				ft_ds_extend_free(t_dynamic_string *buffer, char *s);
 t_dynamic_string	ft_ds_new(char *s);
+
+// srcs/ft_printf
+int					ft_dprintf(int fd, const char *format, ...);
+int					ft_printf(const char *format, ...);
+char				*ft_sprintf(const char *format, ...);
+int					ft_vdprintf(int fd, const char *format, va_list ap);
+int					ft_vprintf(const char *format, va_list ap);
+char				*ft_vsprintf(const char *format, va_list ap);
 
 // srcs/ft_split
 size_t				ft_num_words(char const *s, char const *set);
 char				**ft_split_set(char const *s, char const *set);
 char				**ft_split(char const *s, char c);
 
-// get_next_line.c
+// srcs/get_next_line
 char				*get_next_line(int fd);
 
 // srcs/linked_lists
@@ -102,7 +115,6 @@ void				*ft_memmove(void *dest, const void *src, size_t n);
 void				*ft_memset(void *s, int c, size_t n);
 
 // srcs/output
-int					ft_printf(const char *format, ...);
 int					ft_putbase_fd(unsigned long n,
 						char *base, size_t base_length, int fd);
 int					ft_putchar_fd(char c, int fd);
@@ -120,7 +132,7 @@ char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strjoin3(char const *s1, char const *s2,
 						char const *s3);
 void				ft_striteri(char *s, void (*f)(unsigned int, char*));
-char				*ft_strjoin_arr(int size, char **strs, char *sep);
+char				*ft_strjoin_arr(char **strs, char *sep, char *end);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char				*ft_strrchr(const char *s, int c);

@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_vdprintf.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 17:52:27 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/13 17:11:31 by axbrisse         ###   ########.fr       */
+/*   Created: 2023/02/25 23:41:07 by axbrisse          #+#    #+#             */
+/*   Updated: 2023/02/26 14:22:33 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strrchr(const char *s, int c)
+int	ft_vdprintf(int fd, const char *format, va_list ap)
 {
-	const unsigned char	uc = (unsigned char)c;
-	size_t				i;
-	char				*ptr;
+	char	*content;
+	int		written;
 
-	i = 0;
-	ptr = NULL;
-	while (s[i] != '\0')
-	{
-		if (s[i] == uc)
-			ptr = (char *)(s + i);
-		i++;
-	}
-	if (uc == 0)
-		ptr = (char *)(s + i);
-	return (ptr);
+	content = ft_vsprintf(format, ap);
+	if (content == NULL)
+		return (-1);
+	written = write(fd, content, ft_strlen(content));
+	free(content);
+	return (written);
 }

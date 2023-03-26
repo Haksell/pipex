@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/20 22:24:32 by axbrisse          #+#    #+#              #
-#    Updated: 2023/02/19 08:55:59 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/02/26 14:16:23 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ PATH_SRCS += srcs/conversion
 PATH_SRCS += srcs/chars
 PATH_SRCS += srcs/clean
 PATH_SRCS += srcs/dynamic_strings
+PATH_SRCS += srcs/ft_printf
 PATH_SRCS += srcs/ft_split
 PATH_SRCS += srcs/get_next_line
 PATH_SRCS += srcs/linked_lists
@@ -31,8 +32,12 @@ FILES += ft_atoi_safe
 FILES += ft_bzero
 FILES += ft_calloc
 FILES += ft_close
+FILES += ft_dprintf
+FILES += ft_ds_add_nbr
+FILES += ft_ds_add_nbr_base
 FILES += ft_ds_append
 FILES += ft_ds_extend
+FILES += ft_ds_extend_free
 FILES += ft_ds_new
 FILES += ft_endswith
 FILES += ft_free
@@ -46,6 +51,7 @@ FILES += ft_isprint
 FILES += ft_isspace
 FILES += ft_isupper
 FILES += ft_itoa
+FILES += ft_itoa_base
 FILES += ft_lstadd_back
 FILES += ft_lstadd_front
 FILES += ft_lstclear
@@ -72,6 +78,7 @@ FILES += ft_putnbr_fd
 FILES += ft_putstr_fd
 FILES += ft_split
 FILES += ft_split_set
+FILES += ft_sprintf
 FILES += ft_startswith
 FILES += ft_strchr
 FILES += ft_strcmp
@@ -91,6 +98,9 @@ FILES += ft_strtrim
 FILES += ft_substr
 FILES += ft_tolower
 FILES += ft_toupper
+FILES += ft_vdprintf
+FILES += ft_vprintf
+FILES += ft_vsprintf
 FILES += get_next_line
 
 SRCS := ${addsuffix .c, ${FILES}}

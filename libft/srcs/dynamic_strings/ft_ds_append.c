@@ -6,31 +6,31 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 10:11:09 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/01/06 21:35:10 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/03 00:32:42 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-bool	ft_ds_append(t_dynamic_string *s1, char c)
+bool	ft_ds_append(t_dynamic_string *ds, char c)
 {
 	char			*new_content;
 
-	if (s1->length + 1 == s1->capacity)
+	if (ds->length + 1 == ds->capacity)
 	{
-		s1->capacity <<= 1;
-		new_content = malloc(s1->capacity);
+		ds->capacity <<= 1;
+		new_content = malloc(ds->capacity);
 		if (new_content == NULL)
 		{
-			free(s1->content);
+			free(ds->content);
 			return (false);
 		}
-		ft_strlcpy(new_content, s1->content, s1->length + 1);
-		free(s1->content);
-		s1->content = new_content;
+		ft_strlcpy(new_content, ds->content, ds->length + 1);
+		free(ds->content);
+		ds->content = new_content;
 	}
-	s1->content[s1->length] = c;
-	s1->content[s1->length + 1] = '\0';
-	++s1->length;
+	ds->content[ds->length] = c;
+	ds->content[ds->length + 1] = '\0';
+	++ds->length;
 	return (true);
 }
