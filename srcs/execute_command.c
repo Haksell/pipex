@@ -6,31 +6,31 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 01:15:04 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 01:46:55 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+static bool	set_null_path(t_data *data)
+{
+	data->full_path = NULL;
+	return (true);
+}
 
 static bool	find_absolute_path(t_data *data, char **path, char *command)
 {
 	int	i;
 
 	if (command == NULL)
-	{
-		data->full_path = NULL;
-		return (true);
-	}
+		return (set_null_path(data));
 	if (ft_strchr(command, '/'))
 	{
 		data->full_path = ft_strdup(command);
 		return (data->full_path != NULL);
 	}
 	if (command[0] == '\0' || command[0] == '.' || path == NULL)
-	{
-		data->full_path = NULL;
-		return (true);
-	}
+		return (set_null_path(data));
 	i = 0;
 	while (path[i] != NULL)
 	{
@@ -42,8 +42,7 @@ static bool	find_absolute_path(t_data *data, char **path, char *command)
 		free(data->full_path);
 		++i;
 	}
-	data->full_path = NULL;
-	return (true);
+	return (set_null_path(data));
 }
 
 static void	null_path(char *command, char **error_message,
