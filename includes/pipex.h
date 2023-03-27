@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 23:14:37 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:44:04 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ end-of-file (wanted `%s')\n"
 # define USAGE_BONUS "Usage: %s (here_doc delimiter | infile) \
 cmd1 ... cmdn outfile\n"
 
+# define SPACES " \f\n\r\t\v"
+
 typedef struct s_data {
 	int		i;
 	int		num_commands;
@@ -54,6 +56,7 @@ typedef struct s_data {
 }	t_data;
 
 void	clean_pipes(int **pipes);
+void	free_data(t_data *data);
 void	error_filename(char const *filename);
 int		execute_command(t_data *data);
 char	*find_absolute_path(char **path, char *command);

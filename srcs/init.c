@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 22:22:42 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:43:49 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static bool	init_commands(t_data *data, char **argv)
 	i = 0;
 	while (i < data->num_commands)
 	{
-		data->commands[i] = ft_split(argv[i], ' ');
+		data->commands[i] = ft_split_set(argv[i], SPACES);
 		if (data->commands[i] == NULL)
 		{
 			ft_free_triple((void ****)&data->commands);
@@ -117,7 +117,7 @@ bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 			return (NULL);
 	}
 	else
-		data->file_in = argv[2];
+		data->file_in = argv[1 + data->is_heredoc];
 	data->file_out = argv[argc - 1];
 	data->fd_in = STDIN_FILENO;
 	data->fd_out = STDOUT_FILENO;

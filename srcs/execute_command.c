@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 23:24:07 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:44:53 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	execute_command(t_data *data)
 	char	*command = argv[0];
 
 	if (command == NULL)
-		return (EXIT_SUCCESS);
+		command = "";
 	full_path = find_absolute_path(data->path, command);
 	if (full_path == NULL)
 		null_path(&error_message, &error_path, command, &return_value);

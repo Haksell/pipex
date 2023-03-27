@@ -27,8 +27,8 @@ def execute(command, outfile):
         sorted(
             ex.stderr.decode()
             .strip()
-            .replace("pipex:", "shell:")
-            .replace("bash:", "shell:")
+            .replace("pipex: ", "")
+            .replace("bash: ", "")
             .split("\n")
         )
     )

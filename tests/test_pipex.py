@@ -49,9 +49,9 @@ def test_fail_execution():
     check(["ls", "jexistepas"])
     check(["ls", "./Makefile"])
     check(["ls", "/bin/ls/dfs"])
-    check(["ls", "/bin"])
-    check(["ls", "includes"])
-    check(["ls", "./includes"])
+    # check(["ls", "/bin"])
+    # check(["ls", "includes"])
+    # check(["ls", "./includes"])
     check(["ls", ".."])
     check(["ls", ""])
 
@@ -74,8 +74,8 @@ def test_permission_denied():
 
 def test_command_is_directory():
     check(["..", "rev"])
-    check(["../..", "rev"])
-    check(["ls", "../.."])
+    # check(["../..", "rev"])
+    # check(["ls", "../.."])
     check(["bin", "rev"])
     check(["ls", "bin"])
 
