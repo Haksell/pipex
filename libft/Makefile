@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/20 22:24:32 by axbrisse          #+#    #+#              #
-#    Updated: 2023/02/26 14:16:23 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/03/27 05:45:31 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ FILES += ft_ds_extend_free
 FILES += ft_ds_new
 FILES += ft_endswith
 FILES += ft_free
-FILES += ft_free_double_pointer
+FILES += ft_free_double
+FILES += ft_free_triple
 FILES += ft_isalnum
 FILES += ft_isalpha
 FILES += ft_isascii

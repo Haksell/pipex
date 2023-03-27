@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 11:27:39 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/03 00:32:58 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 05:45:45 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ int					ft_toupper(int c);
 // srcs/clean
 void				ft_close(int *fd);
 void				ft_free(void **ptr);
-void				ft_free_double_pointer(void ***grid, size_t height);
+void				ft_free_double(void ***ptr);
+void				ft_free_triple(void ****ptr);
 
 // srcs/conversion
 int					ft_atoi(const char *nptr);

@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:18:15 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 06:12:56 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,53 +32,41 @@ static int	error_not_found(char *command)
 	return (RET_BAD_COMMAND);
 }
 
-static int	execute(t_data *data, char *cmd_name)
+static int	execute(t_data *data)
 {
-	char	**cmd_argv;
 	char	*full_path;
 
-	cmd_argv = ft_split(cmd_name, ' ');
-	if (cmd_argv == NULL)
-		return (perror("malloc"), EXIT_FAILURE);
-	full_path = find_absolute_path(data->path, cmd_argv[0]);
+	full_path = find_absolute_path(data->path, data->commands[data->i][0]);
 	if (full_path == NULL)
-		return (error_not_found(cmd_argv[0]));
+		return (error_not_found(data->commands[data->i][0]));
 	if (!is_executable(full_path))
 	{
 		error_filename(full_path);
 		return (RET_BAD_COMMAND);
 	}
-	execve(full_path, cmd_argv, data->env);
-	error_filename(cmd_argv[0]);
-	ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
+	execve(full_path, data->commands[data->i], data->env);
+	error_filename(data->commands[data->i][0]);
 	free(full_path);
 	return (RET_EXEC_FAIL);
 }
 
-static void	pipe_exec(t_data *data, pid_t pid, int i)
+static void	pipe_exec(t_data *data)
 {
-	char	*cmd_name;
-
-	if (pid == 0)
-	{
-		if (i == 0)
-			data->fd_in = open(data->file_in, O_RDONLY);
-		ft_close(&data->pipes[i][0]);
-		dup2(data->pipes[i][1], STDOUT_FILENO);
-		ft_close(&data->pipes[i][1]);
-		dup2(data->fd_in, STDIN_FILENO);
-		ft_close(&data->fd_in);
-		cmd_name = data->commands[i];
-		exit(execute(data, cmd_name));
-	}
-	ft_close(&data->pipes[i][1]);
+	if (data->i == 0)
+		data->fd_in = open(data->file_in, O_RDONLY);
+	ft_close(&data->pipes[data->i][0]);
+	dup2(data->pipes[data->i][1], STDOUT_FILENO);
+	ft_close(&data->pipes[data->i][1]);
+	dup2(data->fd_in, STDIN_FILENO);
 	ft_close(&data->fd_in);
-	data->fd_in = data->pipes[i][0];
+	exit(execute(data));
+	ft_close(&data->pipes[data->i][1]);
+	ft_close(&data->fd_in);
+	data->fd_in = data->pipes[data->i][0];
 }
 
 static int	last_exec(t_data *data, pid_t pid)
 {
-	char	*cmd_name;
 	pid_t	wpid;
 	int		return_value;
 	int		wstatus;
@@ -92,14 +80,13 @@ static int	last_exec(t_data *data, pid_t pid)
 		ft_close(&data->pipes[data->num_commands - 2][1]);
 		dup2(data->pipes[data->num_commands - 2][0], STDIN_FILENO);
 		dup2(data->fd_out, STDOUT_FILENO);
-		cmd_name = data->commands[data->num_commands - 1];
-		exit(execute(data, cmd_name));
+		exit(execute(data));
 	}
 	ft_close(&data->fd_out);
 	clean_pipes(data->pipes);
-	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
+	ft_free_double((void ***)&data->path);
 	if (data->is_heredoc)
-	  	unlink(HEREDOC_FILE);
+		unlink(data->file_in);
 	while (true)
 	{
 		wpid = wait(&wstatus);
@@ -115,19 +102,18 @@ int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
 	pid_t	pid;
-	int		i;
 
 	if (!init_pipex(&data, argc, argv, env))
 		return (EXIT_FAILURE);
-	i = 0;
-	while (i < data.num_commands)
+	while (true)
 	{
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), EXIT_FAILURE); // TODO free
-		if (i == data.num_commands - 1)
+		if (data.i == data.num_commands - 1)
 			return (last_exec(&data, pid));
-		pipe_exec(&data, pid, i);
-		++i;
+		if (pid == 0)
+			pipe_exec(&data);
+		++data.i;
 	}
 }

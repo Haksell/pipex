@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:18:15 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 06:12:46 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,35 +39,79 @@ static bool	check_args(t_data *data, int argc, char **argv)
 	}
 }
 
-static int	**init_pipes(int num_pipes)
+static bool	init_pipes(t_data *data)
 {
-	int	**pipes;
 	int	i;
 
-	pipes = ft_calloc(num_pipes + 1, sizeof(int *));
-	if (pipes == NULL)
-		return (perror("malloc"), NULL);
-	pipes[num_pipes] = NULL;
+	data->pipes = ft_calloc(data->num_commands, sizeof(int *));
+	if (data->pipes == NULL)
+		return (perror("malloc"), false);
+	data->pipes[data->num_commands - 1] = NULL;
 	i = 0;
-	while (i < num_pipes)
+	while (i < data->num_commands - 1)
 	{
-		pipes[i] = malloc(sizeof(int) * 2);
-		if (pipes[i] == NULL)
-			return (clean_pipes(pipes), perror("malloc"), NULL);
-		if (pipe(pipes[i]) == -1)
-			return (clean_pipes(pipes), perror("pipe"), NULL);
+		data->pipes[i] = malloc(sizeof(int) * 2);
+		if (data->pipes[i] == NULL)
+			return (clean_pipes(data->pipes), perror("malloc"), false);
+		if (pipe(data->pipes[i]) == -1)
+			return (clean_pipes(data->pipes), perror("pipe"), false);
 		++i;
 	}
-	return (pipes);
+	return (true);
+}
+
+static bool	init_commands(t_data *data, char **argv)
+{
+	int	i;
+
+	data->commands = ft_calloc(data->num_commands + 1, sizeof(char **));
+	if (data->commands == NULL)
+	{
+		perror("malloc");
+		return (false);
+	}
+	i = 0;
+	while (i < data->num_commands)
+	{
+		data->commands[i] = ft_split(argv[i], ' ');
+		if (data->commands[i] == NULL)
+		{
+			ft_free_triple((void ****)&data->commands);
+			return (false);
+		}
+		++i;
+	}
+	return (true);
+}
+
+static bool	init_path(t_data *data)
+{
+	int	i;
+
+	if (data->env == NULL)
+		return (NULL);
+	i = 0;
+	while (data->env[i] != NULL)
+	{
+		if (ft_startswith(data->env[i], "PATH="))
+		{
+			data->path = ft_split(data->env[i] + 5, ':');
+			return (data->path != NULL);
+		}
+		++i;
+	}
+	return (true);
 }
 
 bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 {
 	ft_bzero(data, sizeof(t_data));
-	if (!check_args(data, argc, argv))
-		return (false);
-	data->commands = argv + 2 + data->is_heredoc;
 	data->env = env;
+	if (!check_args(data, argc, argv)
+		|| !init_commands(data, argv + 2 + data->is_heredoc)
+		|| !init_path(data)
+		|| !init_pipes(data))
+		return (false);
 	if (data->is_heredoc)
 	{
 		data->file_in = heredoc(argv[2]);
@@ -77,9 +121,5 @@ bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 	else
 		data->file_in = argv[2];
 	data->file_out = argv[argc - 1];
-	data->pipes = init_pipes(data->num_commands - 1);
-	if (data->pipes == NULL)
-		return (false);
-	data->path = get_path(env);
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 22:33:57 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/07 12:49:06 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 05:44:29 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**ft_split_set(char const *s, char const *set)
 	size_t			arr_idx;
 	size_t			i;
 
-	words = malloc(sizeof(char *) * (num_words + 1));
+	words = ft_calloc(num_words + 1, sizeof(char *));
 	if (words == NULL)
 		return (NULL);
 	words[num_words] = NULL;
@@ -54,7 +54,7 @@ char	**ft_split_set(char const *s, char const *set)
 		{
 			words[arr_idx] = add_word(s, &i, set);
 			if (words[arr_idx] == NULL)
-				ft_free_double_pointer((void ***)&words, arr_idx);
+				ft_free_double((void ***)&words);
 			if (words[arr_idx] == NULL)
 				return (NULL);
 			++arr_idx;

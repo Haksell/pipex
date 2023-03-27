@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:19:35 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 06:01:34 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ end-of-file (wanted `%s')\n"
 cmd1 ... cmdn outfile\n"
 
 typedef struct s_data {
+	int		i;
 	int		num_commands;
 	int		fd_in;
 	int		fd_out;
 	int		**pipes;
 	char	*file_in;
 	char	*file_out;
-	char	**commands;
+	char	***commands;
 	char	**env;
 	char	**path;
 	bool	is_heredoc;
@@ -55,7 +56,6 @@ typedef struct s_data {
 void	clean_pipes(int **pipes);
 void	error_filename(char const *filename);
 char	*find_absolute_path(char **path, char *command);
-char	**get_path(char **env);
 char	*heredoc(char *eof);
 bool	init_pipex(t_data *data, int argc, char **argv, char **env);
 bool	is_executable(char *full_path);
