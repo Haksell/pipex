@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:30:04 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:37:21 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	connect_pipes(t_data *data)
 		dup2(data->pipes[data->i][1], STDOUT_FILENO);
 }
 
-static int	wait_for_execution(pid_t pid)
+static int	wait_for_execution(t_data *data)
 {
 	pid_t	wpid;
 	int		return_value;
@@ -50,7 +50,7 @@ static int	wait_for_execution(pid_t pid)
 		wpid = wait(&wstatus);
 		if (wpid == -1)
 			break ;
-		if (wpid != pid)
+		if (wpid != data->pid)
 			continue ;
 		if (WIFEXITED(wstatus))
 			return_value = WEXITSTATUS(wstatus);
@@ -80,5 +80,5 @@ int	main(int argc, char **argv, char **env)
 		++data.i;
 	}
 	free_data(&data);
-	return (wait_for_execution(data.pid));
+	return (wait_for_execution(&data));
 }

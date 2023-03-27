@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:30:54 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:35:14 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static char	*find_absolute_path(char **path, char *command)
 		if (full_path == NULL)
 		{
 			perror("malloc");
-			exit(EXIT_FAILURE);
+			exit(EXIT_FAILURE); // TODO free
 		}
 		if (access(full_path, F_OK) == 0)
 			return (full_path);
@@ -81,5 +81,6 @@ int	execute_command(t_data *data)
 		return_value = RET_CANNOT_EXECUTE;
 	}
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", error_path, error_message);
+	free(full_path);
 	return (return_value);
 }
