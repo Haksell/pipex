@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:51:57 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:58:33 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ static bool	init_path(t_data *data)
 bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 {
 	ft_bzero(data, sizeof(t_data));
-	data->argv = argv;
 	data->env = env;
 	if (!check_args(data, argc, argv)
 		|| !init_path(data)
 		|| !init_pipes(data))
 		return (false);
+	data->commands = argv + 2 + data->is_heredoc;
 	if (data->is_heredoc)
 	{
 		data->file_in = heredoc(argv[2]);

@@ -6,11 +6,17 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:54:36 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 01:17:15 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+static void	file_error(char *filename)
+{
+	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
+	exit(EXIT_FAILURE);
+}
 
 static void	connect_pipes(t_data *data)
 {
@@ -38,20 +44,19 @@ static void	connect_pipes(t_data *data)
 		dup2(data->pipes[data->i][1], STDOUT_FILENO);
 }
 
-static int	wait_for_execution(t_data *data)
+static int	wait_for_execution(pid_t pid)
 {
 	pid_t	wpid;
 	int		return_value;
 	int		wstatus;
 
-	free_data(data);
 	return_value = EXIT_FAILURE;
 	while (true)
 	{
 		wpid = wait(&wstatus);
 		if (wpid == -1)
 			break ;
-		if (wpid != data->pid)
+		if (wpid != pid)
 			continue ;
 		if (WIFEXITED(wstatus))
 			return_value = WEXITSTATUS(wstatus);
@@ -71,7 +76,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		data.pid = fork();
 		if (data.pid == -1)
-			return (perror("fork"), EXIT_FAILURE); // TODO free
+			return (perror("fork"), EXIT_FAILURE); // break and still wait
 		if (data.pid == 0)
 		{
 			connect_pipes(&data);
@@ -80,5 +85,6 @@ int	main(int argc, char **argv, char **env)
 		}
 		++data.i;
 	}
-	return (wait_for_execution(&data));
+	free_data(&data);
+	return (wait_for_execution(data.pid));
 }

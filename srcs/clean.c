@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:50:33 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 01:14:00 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,15 @@ void	clean_pipes(int **pipes)
 
 void	free_data(t_data *data)
 {
-	// close(data->fd_in);
-	// close(data->fd_out);
+	close(data->fd_in);
+	close(data->fd_out);
 	clean_pipes(data->pipes);
+	free(data->full_path);
+	ft_free_double((void ***)&data->argv);
+	ft_free_double((void ***)&data->path);
 	if (data->is_heredoc)
 	{
 		unlink(data->file_in);
 		free(data->file_in);
 	}
-	// ft_free_double((void ***)data->path);
-}
-
-void	file_error(char *filename)
-{
-	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
-	exit(EXIT_FAILURE);
 }
