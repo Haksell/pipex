@@ -6,38 +6,54 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 23:09:38 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:24:07 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	error_not_found(char *command)
+static void	null_path(char **error_message, char **error_path,
+	char *command, int *return_value)
 {
-	char	*message;
+	*error_message = "command not found";
+	*error_path = command;
+	*return_value = RET_COMMAND_NOT_FOUND;
+}
 
-	message = ft_strjoin3("pipex: ", command, ": command not found\n");
-	if (message == NULL)
-		return (perror("malloc"), EXIT_FAILURE);
-	ft_putstr_fd(message, STDERR_FILENO);
-	free(message);
-	return (RET_BAD_COMMAND);
+static void	invalid_path(char **error_message, char **error_path,
+		char *full_path, int *return_value)
+{
+	*error_message = strerror(errno);
+	*error_path = (char *)full_path;
+	if (errno == ENOTDIR || errno == EISDIR)
+		*return_value = RET_CANNOT_EXECUTE;
+	else
+		*return_value = RET_COMMAND_NOT_FOUND;
 }
 
 int	execute_command(t_data *data)
 {
+	int		return_value;
 	char	*full_path;
+	char	*error_message;
+	char	*error_path;
+	char	**argv = data->commands[data->i];
+	char	*command = argv[0];
 
-	full_path = find_absolute_path(data->path, data->commands[data->i][0]);
+	if (command == NULL)
+		return (EXIT_SUCCESS);
+	full_path = find_absolute_path(data->path, command);
 	if (full_path == NULL)
-		return (error_not_found(data->commands[data->i][0]));
-	if (!is_executable(full_path))
+		null_path(&error_message, &error_path, command, &return_value);
+	else if (access(full_path, F_OK) != 0)
+		invalid_path(&error_message, &error_path, full_path, &return_value);
+	else
 	{
-		error_filename(full_path);
-		return (RET_BAD_COMMAND);
+		execve(full_path, argv, data->env);
+		error_message = strerror(errno);
+		error_path = (char *)full_path;
+		return_value = RET_CANNOT_EXECUTE;
 	}
-	execve(full_path, data->commands[data->i], data->env);
-	error_filename(data->commands[data->i][0]);
-	free(full_path);
-	return (RET_EXEC_FAIL);
+	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", error_path, error_message);
+	return (return_value);
 }

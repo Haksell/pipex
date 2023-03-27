@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 23:09:06 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:14:37 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 # define HEREDOC_WARNING "pipex: warning: here-document delimited by \
 end-of-file (wanted `%s')\n"
 
-# define RET_EXEC_FAIL 126
-# define RET_BAD_COMMAND 127
+# define RET_CANNOT_EXECUTE 126
+# define RET_COMMAND_NOT_FOUND 127
 
 # define USAGE_MANDATORY "Usage: %s infile cmd1 cmd2 outfile\n"
 # define USAGE_BONUS "Usage: %s (here_doc delimiter | infile) \
