@@ -1,118 +1,128 @@
-# TODO test one command
-# TODO test true return code
-# TODO test redirection
-# TODO test heredoc
-# TODO test env -i
-
-from dataclasses import dataclass
 import subprocess
-
-
-@dataclass
-class Execution:
-    returncode: int
-    stdout: str
-    stderr: str
-
-
-def quote(s):
-    return f"'{s}'"
-
-
-def execute(command):
-    exec = subprocess.run(command, shell=True, capture_output=True)
-    return Execution(
-        bool(exec.returncode),  # TODO not bool
-        exec.stdout.decode().strip(),
-        "\n".join(
-            sorted(
-                exec.stderr.decode()
-                .strip()
-                .replace("pipex:", "shell:")
-                .replace("bash:", "shell:")
-                .split("\n")
-            )
-        ),
-    )
-
-
-def compare_no_redirection(argv):
-    pipex_command = f"make bonus -s && ./pipex_bonus /dev/stdin {' '.join(map(quote, argv))} /dev/stdout"
-    pipes = " | ".join(argv)
-    bash_command = f"/usr/bin/bash --posix -c -i '{pipes}'"
-    pipex_exec = execute(pipex_command)
-    bash_exec = execute(bash_command)
-    assert pipex_exec == bash_exec, pipes
+from utils import F1, F2, UNWRITABLE, check
 
 
 def test_norminette():
-    assert subprocess.run(["norminette", "includes", "libft", "srcs"]).returncode == 0
+    assert (
+        subprocess.run(
+            ["norminette", "includes", "libft", "srcs"], capture_output=True
+        ).returncode
+        == 0
+    )
 
 
 def test_absolute_path():
-    compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev"])
-    compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/rev"])
-    compare_no_redirection(["/usr/bin/ls", "/usr/bin/wc", "/usr/bin/rev"])
-    compare_no_redirection(["/usr/bin/ls", "/usr/bin/wc", "/usr/bin/rev"])
-    compare_no_redirection(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/tac"])
-    compare_no_redirection(
+    check(["/usr/bin/ls", "/usr/bin/rev"])
+    check(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/rev"])
+    check(["/usr/bin/ls", "/usr/bin/wc", "/usr/bin/rev"])
+    check(["/usr/bin/ls", "/usr/bin/wc", "/usr/bin/rev"])
+    check(["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/tac"])
+    check(
         ["/usr/bin/ls", "/usr/bin/rev", "/usr/bin/tac", "/usr/bin/rev", "/usr/bin/tac"]
     )
 
 
 def test_relative():
-    compare_no_redirection(["./tests/shout", "rev"])
-    compare_no_redirection(["./tests/shout Bonjour", "rev"])
-    compare_no_redirection(["./tests/shout Bonjour Comment Sa Va ???", "rev"])
-    compare_no_redirection(["./tests/jexistepas", "rev"])
+    check(["./tests/shout", "rev"])
+    check(["./tests/shout Bonjour", "rev"])
+    check(["./tests/shout Bonjour Comment Sa Va ???", "rev"])
+    check(["./tests/jexistepas", "rev"])
 
 
 def test_in_path():
-    compare_no_redirection(["ls", "rev"])
-    compare_no_redirection(["ls", "rev", "rev"])
-    compare_no_redirection(["ls", "wc", "rev"])
-    compare_no_redirection(["ls", "wc", "rev"])
-    compare_no_redirection(["ls", "rev", "tac"])
-    compare_no_redirection(["ls", "rev", "tac", "rev", "tac"])
+    check(["ls", "grep s"])
+    check(["ls", "rev"])
+    check(["shout mdr", "rev"])
+    check(["ls", "rev", "rev"])
+    check(["ls", "wc", "rev"])
+    check(["ls", "wc", "rev"])
+    check(["ls", "rev", "tac"])
+    check(["ls", "rev", "tac", "rev", "tac"])
 
 
 def test_args():
-    compare_no_redirection(["echo wesh la famille", "wc", "rev"])
-    compare_no_redirection(["echo wesh la famille", "tr a z"])
+    check(["echo wesh la famille", "wc", "rev"])
+    check(["echo wesh la famille", "tr a z"])
+
+
+def test_fail_execution():
+    check(["ls", "/usr/bin/jexistepas"])
+    check(["ls", "/bin/ls/fsafsa"])
+    check(["ls", "jexistepas"])
+    check(["ls", "./Makefile"])
+    check(["ls", "/bin/ls/dfs"])
+    check(["ls", "/bin"])
+    check(["ls", "includes"])
+    check(["ls", "./includes"])
+    check(["ls", ".."])
+    check(["ls", ""])
+
+
+def test_random_bullshit():
+    check(["abc", "def", "ghi", "jkl", "mno", "qrs", "tuv"])
+    check(["ls", "rev", "tac", "rev", "tac"])
+    check(["echo lol", "echo mdr"], outfile="/dev/full")
+    check(["env", "env"], outfile="/dev/full")
 
 
 def test_permission_denied():
-    compare_no_redirection(["Makefile", "ls"])
-    compare_no_redirection(["ls", "Makefile"])
-    compare_no_redirection(["/dev/null", "rev"])
-    compare_no_redirection(["ls", "/dev/null"])
+    check(["Makefile", "ls"])
+    check(["ls", "Makefile"])
+    check(["/dev/null", "rev"])
+    check(["ls", "/dev/null"])
 
 
 def test_command_is_directory():
-    compare_no_redirection(["..", "rev"])
-    compare_no_redirection(["ls", ".."])
-    compare_no_redirection(["../..", "rev"])
-    compare_no_redirection(["ls", "../.."])
-    compare_no_redirection(["bin", "rev"])
-    compare_no_redirection(["ls", "bin"])
+    check(["..", "rev"])
+    check(["ls", ".."])
+    check(["../..", "rev"])
+    check(["ls", "../.."])
+    check(["bin", "rev"])
+    check(["ls", "bin"])
 
 
 def test_command_not_found():
-    compare_no_redirection(["wazaaa", "ls"])
-    compare_no_redirection(["ls", "wazaaa"])
-    compare_no_redirection(["ls", "lol", "ls"])
-    compare_no_redirection(["ls", "lol", "ls", "mdr"])
-    compare_no_redirection(["ls", "lol", "ls", "mdr", "ls"])
-    compare_no_redirection(
-        ["ls", "tac", "rev", "ls", "rev", "rev", "rev", "sl", "ls", "rev"]
-    )
+    check(["wazaaa", "ls"])
+    check(["ls", "wazaaa"])
+    check(["ls", "lol", "ls"])
+    check(["ls", "lol", "ls", "mdr"])
+    check(["ls", "lol", "ls", "mdr", "ls"])
+    check(["ls", "tac", "rev", "ls", "rev", "rev", "rev", "sl", "ls", "rev"])
 
 
 def test_enoent():
-    compare_no_redirection(["./qwert", "ls"])
-    compare_no_redirection(["ls", "./qwert"])
+    check(["./qwert", "ls"])
+    check(["ls", "./qwert"])
 
 
 def test_misuse_of_shell_builtin():
-    compare_no_redirection(["echo a", "ls -w"])
-    compare_no_redirection(["ls -w", "echo a"])
+    check(["echo a", "ls -w"])
+    check(["ls -w", "echo a"])
+
+
+def test_pipe():
+    check(["ls -la", "wc", "wc"])
+    check(["eclo lol", "echo lol"])
+    check(["echo lol", "eclo lol"])
+    check(["echo yo", "less"])
+    check(["ls", "echo yes", "grep s"])
+    check(["cat", "cat", "ls"])
+    check(["cat", "cat", "echo abc"])
+    check(["echo bonsoir", "pwd", "asdf", "cat -e"])
+
+
+def test_yes():
+    check(["yes", "wc-l"])
+    check(["yes", "ls"])
+    check(["yes", "ls", "wc-l"])
+    check(["yes", "ls", "wc -l"])
+    check(["yes", "head -n 10"])
+
+
+def test_redirections():
+    check(["cat", "rev"], infile="Makefile")
+    check(["tac", "rev"], infile="Makefile")
+    check(["cat", "rev"], infile="Makefile", outfile=F1)
+    check(["tac", "rev"], infile="Makefile", outfile=F2)
+    check(["tac", "rev"], infile="Makefile", outfile=UNWRITABLE)
+    check(["tac", "rev"], infile=UNWRITABLE, outfile=F1)

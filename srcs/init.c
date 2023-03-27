@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 08:09:08 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 01:18:30 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static bool	check_args(t_data *data)
 {
 	const bool	is_bonus = ft_endswith(data->argv[0], "_bonus");
 
-	data->is_heredoc = (is_bonus && ft_strcmp(data->argv[1], "here_doc") == 0);
+	data->is_heredoc = (is_bonus && data->argc >= 2
+			&& ft_strcmp(data->argv[1], "here_doc") == 0);
 	data->num_children = data->argc - 3 - data->is_heredoc;
 	if (is_bonus && data->num_children < 2)
 		return (error_usage(data->argv[0], USAGE_BONUS));
@@ -80,7 +81,7 @@ static int	**init_pipes(int num_pipes)
 	int	**pipes;
 	int	i;
 
-	pipes = malloc(sizeof(int *) * num_pipes);
+	pipes = ft_calloc(num_pipes + 1, sizeof(int *));
 	if (pipes == NULL)
 		return (perror("malloc"), NULL);
 	i = 0;

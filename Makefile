@@ -6,28 +6,26 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 12:42:52 by axbrisse          #+#    #+#              #
-#    Updated: 2023/02/20 07:34:45 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/03/27 01:27:48 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := pipex
 BONUS := pipex_bonus
-
 PATH_SRCS := srcs
 PATH_OBJS := objs
 PATH_LIBFT := libft
+PATH_TESTS := tests
+GARBAGE := .pytest_cache tests/__pycache__
 LIBFT := libft/libft.a
 INCLUDES := -I./includes -I./libft/includes
 HEADER := ./includes/pipex.h
+CC := cc -Wall -Wextra -Werror
 
 FILES := errors init main path pipes
-
 vpath %.c ${PATH_SRCS}
-
 SRCS := ${addsuffix .c, ${FILES}}
 OBJS := ${patsubst %.c, ${PATH_OBJS}/%.o, ${SRCS}}
-
-CC := cc -Wall -Wextra -Werror
 
 all: ${NAME}
 
@@ -42,15 +40,17 @@ ${LIBFT}:
 	${MAKE} -s -C ${PATH_LIBFT}
 
 clean:
-	${MAKE} -s -C ${PATH_LIBFT} clean
-	rm -rf ${PATH_OBJS} .pytest_cache
+	${MAKE} -s -C ${PATH_LIBFT} fclean
+	rm -rf ${PATH_OBJS} ${GARBAGE}
 
 fclean: clean
-	${MAKE} -s -C ${PATH_LIBFT} fclean
 	rm -f ${NAME} ${BONUS}
 
 re: fclean ${NAME}
 
 bonus: ${BONUS}
 
-.PHONY: all bonus clean fclean re
+test:
+	@pytest -rA -vv ${PATH_TESTS}
+
+.PHONY: all bonus clean fclean re test

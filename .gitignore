@@ -4,5 +4,4 @@ libft/libft.a
 pipex
 pipex_bonus
 tests/__pycache__
-tests/unwritable
-tests/garbage
+tests/outfiles
