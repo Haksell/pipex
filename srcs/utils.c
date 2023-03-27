@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:33:00 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:38:18 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	clean_pipes(int **pipes)
 
 void	free_data(t_data *data)
 {
-	close(data->fd_in);
-	close(data->fd_out);
+	// close(data->fd_in);
+	// close(data->fd_out);
 	clean_pipes(data->pipes);
 	if (data->is_heredoc)
 	{
