@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:13:13 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 05:18:15 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ static bool	check_args(t_data *data, int argc, char **argv)
 
 	data->is_heredoc = (is_bonus && argc >= 2
 			&& ft_strcmp(argv[1], "here_doc") == 0);
-	data->num_children = argc - 3 - data->is_heredoc;
+	data->num_commands = argc - 3 - data->is_heredoc;
 	if (is_bonus)
 	{
-		if (data->num_children < 2)
+		if (data->num_commands < 2)
 		{
 			ft_dprintf(STDERR_FILENO, USAGE_BONUS, argv[0]);
 			return (false);
@@ -30,7 +30,7 @@ static bool	check_args(t_data *data, int argc, char **argv)
 	}
 	else
 	{
-		if (data->num_children != 2)
+		if (data->num_commands != 2)
 		{
 			ft_dprintf(STDERR_FILENO, USAGE_MANDATORY, argv[0]);
 			return (false);
@@ -63,9 +63,10 @@ static int	**init_pipes(int num_pipes)
 
 bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 {
+	ft_bzero(data, sizeof(t_data));
 	if (!check_args(data, argc, argv))
 		return (false);
-	data->argv = argv + 2 + data->is_heredoc;
+	data->commands = argv + 2 + data->is_heredoc;
 	data->env = env;
 	if (data->is_heredoc)
 	{
@@ -76,7 +77,7 @@ bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 	else
 		data->file_in = argv[2];
 	data->file_out = argv[argc - 1];
-	data->pipes = init_pipes(data->num_children - 1);
+	data->pipes = init_pipes(data->num_commands - 1);
 	if (data->pipes == NULL)
 		return (false);
 	data->path = get_path(env);

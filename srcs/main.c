@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:11:18 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 05:18:15 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	pipe_exec(t_data *data, pid_t pid, int i)
 		ft_close(&data->pipes[i][1]);
 		dup2(data->fd_in, STDIN_FILENO);
 		ft_close(&data->fd_in);
-		cmd_name = data->argv[i];
+		cmd_name = data->commands[i];
 		exit(execute(data, cmd_name));
 	}
 	ft_close(&data->pipes[i][1]);
@@ -89,10 +89,10 @@ static int	last_exec(t_data *data, pid_t pid)
 			data->fd_out = open(data->file_out, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		else
 			data->fd_out = open(data->file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		ft_close(&data->pipes[data->num_children - 2][1]);
-		dup2(data->pipes[data->num_children - 2][0], STDIN_FILENO);
+		ft_close(&data->pipes[data->num_commands - 2][1]);
+		dup2(data->pipes[data->num_commands - 2][0], STDIN_FILENO);
 		dup2(data->fd_out, STDOUT_FILENO);
-		cmd_name = data->argv[data->num_children - 1];
+		cmd_name = data->commands[data->num_commands - 1];
 		exit(execute(data, cmd_name));
 	}
 	ft_close(&data->fd_out);
@@ -120,12 +120,12 @@ int	main(int argc, char **argv, char **env)
 	if (!init_pipex(&data, argc, argv, env))
 		return (EXIT_FAILURE);
 	i = 0;
-	while (i < data.num_children)
+	while (i < data.num_commands)
 	{
 		pid = fork();
 		if (pid == -1)
 			return (perror("fork"), EXIT_FAILURE); // TODO free
-		if (i == data.num_children - 1)
+		if (i == data.num_commands - 1)
 			return (last_exec(&data, pid));
 		pipe_exec(&data, pid, i);
 		++i;

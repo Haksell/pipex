@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:12:58 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 05:19:35 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,14 @@ end-of-file (wanted `%s')\n"
 # define USAGE_BONUS "Usage: %s (here_doc delimiter | infile) \
 cmd1 ... cmdn outfile\n"
 
-# define HEREDOC_FILE "/tmp/heredoc.tmp"
-
 typedef struct s_data {
-	int		argc;
-	int		num_children;
+	int		num_commands;
 	int		fd_in;
 	int		fd_out;
 	int		**pipes;
 	char	*file_in;
 	char	*file_out;
-	char	*limiter;
-	char	**argv;
+	char	**commands;
 	char	**env;
 	char	**path;
 	bool	is_heredoc;
