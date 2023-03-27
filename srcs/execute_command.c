@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:35:14 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:46:00 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static char	*find_absolute_path(char **path, char *command)
 	char	*full_path;
 	int		i;
 
+	if (command == NULL)
+		return (NULL);
 	if (ft_strchr(command, '/'))
 		return (ft_strdup(command));
 	if (command[0] == '\0' || command[0] == '.' || path == NULL)
@@ -42,7 +44,10 @@ static void	null_path(char *command, char **error_message,
 	char **error_path, int *return_value)
 {
 	*error_message = "command not found";
-	*error_path = command;
+	if (command == NULL)
+		*error_path = "";
+	else
+		*error_path = command;
 	*return_value = RET_COMMAND_NOT_FOUND;
 }
 
@@ -66,8 +71,6 @@ int	execute_command(t_data *data)
 	char	*command;
 
 	command = data->commands[data->i][0];
-	if (command == NULL)
-		command = "";
 	full_path = find_absolute_path(data->path, command);
 	if (full_path == NULL)
 		null_path(command, &error_message, &error_path, &return_value);
