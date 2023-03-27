@@ -6,13 +6,13 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 03:26:13 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:40:58 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	get_return_value(int wstatus)
+static int	get_return_value(int wstatus)
 {
 	if (WIFEXITED(wstatus))
 		return (WEXITSTATUS(wstatus));
@@ -20,7 +20,19 @@ int	get_return_value(int wstatus)
 		return (128 + WTERMSIG(wstatus));
 }
 
-int	execute(t_data *data, char *cmd_name)
+static int	error_not_found(char *command)
+{
+	char	*message;
+
+	message = ft_strjoin3("pipex: ", command, ": command not found\n");
+	if (message == NULL)
+		return (perror("malloc"), EXIT_FAILURE);
+	ft_putstr_fd(message, STDERR_FILENO);
+	free(message);
+	return (RET_BAD_COMMAND);
+}
+
+static int	execute(t_data *data, char *cmd_name)
 {
 	char	**cmd_argv;
 	char	*full_path;
@@ -30,10 +42,7 @@ int	execute(t_data *data, char *cmd_name)
 		return (perror("malloc"), EXIT_FAILURE);
 	full_path = find_absolute_path(data->path, cmd_argv[0]);
 	if (full_path == NULL)
-	{
-		error_not_found(cmd_argv[0]);
-		return (RET_BAD_COMMAND);
-	}
+		return (error_not_found(cmd_argv[0]));
 	if (!is_executable(full_path))
 	{
 		error_filename(full_path);
@@ -46,7 +55,7 @@ int	execute(t_data *data, char *cmd_name)
 	return (RET_EXEC_FAIL);
 }
 
-void	pipe_exec(t_data *data, pid_t pid, int i)
+static void	pipe_exec(t_data *data, pid_t pid, int i)
 {
 	char	*cmd_name;
 
@@ -65,7 +74,7 @@ void	pipe_exec(t_data *data, pid_t pid, int i)
 	data->fd_in = data->pipes[i][0];
 }
 
-int	last_exec(t_data *data, pid_t pid)
+static int	last_exec(t_data *data, pid_t pid)
 {
 	char	*cmd_name;
 	pid_t	wpid;

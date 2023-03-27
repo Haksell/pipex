@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 03:14:37 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:44:18 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 
+# include <errno.h>
 # include <fcntl.h>
 # include <stdbool.h>
 # include <stdlib.h>
@@ -48,8 +49,7 @@ typedef struct s_data {
 }	t_data;
 
 void	clean_pipes(int **pipes, int num_pipes);
-int		error_filename(char const *filename);
-int		error_not_found(char *command);
+void	error_filename(char const *filename);
 char	*find_absolute_path(char **path, char *command);
 char	**get_path(char **env);
 bool	init_pipex(t_data *data, int argc, char **argv, char **env);

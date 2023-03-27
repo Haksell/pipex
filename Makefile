@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 12:42:52 by axbrisse          #+#    #+#              #
-#    Updated: 2023/03/27 01:27:48 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/03/27 03:46:49 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ INCLUDES := -I./includes -I./libft/includes
 HEADER := ./includes/pipex.h
 CC := cc -Wall -Wextra -Werror
 
-FILES := errors init main path pipes
+FILES := init main utils
 vpath %.c ${PATH_SRCS}
 SRCS := ${addsuffix .c, ${FILES}}
 OBJS := ${patsubst %.c, ${PATH_OBJS}/%.o, ${SRCS}}
@@ -51,6 +51,6 @@ re: fclean ${NAME}
 bonus: ${BONUS}
 
 test:
-	@pytest -rA -vv ${PATH_TESTS}
+	@pytest -rA ${PATH_TESTS}
 
 .PHONY: all bonus clean fclean re test

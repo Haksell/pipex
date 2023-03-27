@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 03:34:40 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:44:25 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,24 @@ bool	is_executable(char *full_path)
 			&& access(full_path, X_OK) != -1);
 	ft_close(&fd);
 	return (return_value);
+}
+
+void	clean_pipes(int **pipes, int num_pipes)
+{
+	int	i;
+
+	i = 0;
+	while (i < num_pipes)
+	{
+		ft_close(&pipes[i][0]);
+		ft_close(&pipes[i][1]);
+		ft_free((void **)&pipes[i]);
+		++i;
+	}
+	ft_free_double_pointer((void ***)&pipes, num_pipes);
+}
+
+void	error_filename(char const *filename)
+{
+	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
 }
