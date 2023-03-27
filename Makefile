@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 12:42:52 by axbrisse          #+#    #+#              #
-#    Updated: 2023/03/27 21:56:05 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/03/27 23:08:54 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ INCLUDES := -I./includes -I./libft/includes
 HEADER := ./includes/pipex.h
 CC := cc -Wall -Wextra -Werror
 
-FILES := heredoc init main utils
+FILES := execute_command heredoc init main utils
 vpath %.c ${PATH_SRCS}
 SRCS := ${addsuffix .c, ${FILES}}
 OBJS := ${patsubst %.c, ${PATH_OBJS}/%.o, ${SRCS}}

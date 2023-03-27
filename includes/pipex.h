@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 22:47:16 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:09:06 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_data {
 
 void	clean_pipes(int **pipes);
 void	error_filename(char const *filename);
+int		execute_command(t_data *data);
 char	*find_absolute_path(char **path, char *command);
 char	*heredoc(char *eof);
 bool	init_pipex(t_data *data, int argc, char **argv, char **env);
