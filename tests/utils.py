@@ -44,7 +44,7 @@ def check(argv, *, infile="/dev/stdin", outfile="/dev/stdout"):
     if not outfile.startswith("/dev/") and not outfile.startswith("tests/infiles/"):
         try:
             os.remove(outfile)
-        except FileNotFoundError:
+        except:
             pass
     pipex_command = f"./pipex_bonus {infile} {' '.join(map(quote, argv))} {outfile}"
     pipes = " | ".join(a or '""' for a in argv)

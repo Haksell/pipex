@@ -61,6 +61,7 @@ def test_fail_execution():
 def test_random_bullshit():
     check(["abc", "def", "ghi", "jkl", "mno", "qrs", "tuv"])
     check(["ls", "rev", "tac", "rev", "tac"])
+    check(["ls", "tac", "rev", "ls", "rev", "rev", "rev", "sleep 1", "sl", "ls", "rev"])
     check(["echo lol", "echo mdr"], outfile="/dev/full")
     check(["env", "env"], outfile="/dev/full")
 
@@ -74,7 +75,6 @@ def test_permission_denied():
 
 def test_command_is_directory():
     check(["..", "rev"])
-    check(["ls", ".."])
     check(["../..", "rev"])
     check(["ls", "../.."])
     check(["bin", "rev"])
@@ -120,7 +120,9 @@ def test_yes():
 
 
 def test_redirections():
+    assert False
     check(["cat", "rev"], infile="Makefile")
+    check(["cat", "head -c42"], infile="Makefile")
     check(["tac", "rev"], infile="Makefile")
     check(["cat", "rev"], infile="Makefile", outfile=F1)
     check(["tac", "rev"], infile="Makefile", outfile=F2)
@@ -133,3 +135,12 @@ def test_redirections():
     check(["echo lol", "echo mdr"], infile="qwerty", outfile=F1)
     check(["rev", "tac"], infile="libft")
     check(["rev", "tac"], infile="Makefile", outfile="libft")
+
+
+def test_cartesian_product():
+    check(["cat", "cat"], infile="Makefile", outfile=F1)
+    check(["cat", "cat"], infile="Makefile", outfile="/")
+    check(["cat", "cat"], infile="/", outfile=F1)
+    check(["cat", "cat"], infile="/", outfile="/")
+    check(["cat", "cat"], infile="/etc/shadow", outfile=F1)
+    check(["cat", "cat"], infile="/etc/shadow", outfile="/")

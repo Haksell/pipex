@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 01:10:43 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:26:13 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,15 @@ int	execute(t_data *data, char *cmd_name)
 		return (perror("malloc"), EXIT_FAILURE);
 	full_path = find_absolute_path(data->path, cmd_argv[0]);
 	if (full_path == NULL)
-		return (error_not_found(cmd_argv[0]));
+	{
+		error_not_found(cmd_argv[0]);
+		return (RET_BAD_COMMAND);
+	}
 	if (!is_executable(full_path))
-		return (error_filename(full_path));
+	{
+		error_filename(full_path);
+		return (RET_BAD_COMMAND);
+	}
 	execve(full_path, cmd_argv, data->env);
 	error_filename(cmd_argv[0]);
 	ft_free_double_pointer((void ***)&cmd_argv, SIZE_MAX);
@@ -77,11 +83,13 @@ int	last_exec(t_data *data, pid_t pid)
 	ft_close(&data->fd_out);
 	clean_pipes(data->pipes, data->num_children - 1);
 	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
-	unlink(HEREDOC_FILE);
-	wpid = -2;
-	while (wpid != -1)
+	if (data->is_heredoc)
+	  	unlink(HEREDOC_FILE);
+	while (true)
 	{
 		wpid = wait(&wstatus);
+		if (wpid == -1)
+			break ;
 		if (wpid == pid)
 			return_value = get_return_value(wstatus);
 	}
