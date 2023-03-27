@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/06 22:33:57 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:44:29 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 21:54:49 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ char	**ft_split_set(char const *s, char const *set)
 	words = ft_calloc(num_words + 1, sizeof(char *));
 	if (words == NULL)
 		return (NULL);
-	words[num_words] = NULL;
 	i = 0;
 	arr_idx = 0;
 	while (s[i] != '\0')

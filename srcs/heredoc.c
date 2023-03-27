@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:13:10 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 05:14:09 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 22:06:46 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static unsigned int	backup_random(void)
 {
-	static unsigned int	x = 3941839098;
+	static unsigned int	x = 42;
 
 	x ^= x << 13;
 	x ^= x >> 17;

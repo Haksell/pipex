@@ -6,7 +6,7 @@
 #    By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/13 12:42:52 by axbrisse          #+#    #+#              #
-#    Updated: 2023/03/27 05:12:37 by axbrisse         ###   ########.fr        #
+#    Updated: 2023/03/27 21:56:05 by axbrisse         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,6 @@ re: fclean ${NAME}
 bonus: ${BONUS}
 
 test:
-	@pytest -rA ${PATH_TESTS}
+	@pytest -rA -vv ${PATH_TESTS}
 
 .PHONY: all bonus clean fclean re test

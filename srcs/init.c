@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 06:12:46 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 22:22:42 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static bool	check_args(t_data *data, int argc, char **argv)
 			ft_dprintf(STDERR_FILENO, USAGE_BONUS, argv[0]);
 			return (false);
 		}
-		return (true);
 	}
 	else
 	{
@@ -35,8 +34,8 @@ static bool	check_args(t_data *data, int argc, char **argv)
 			ft_dprintf(STDERR_FILENO, USAGE_MANDATORY, argv[0]);
 			return (false);
 		}
-		return (true);
 	}
+	return (true);
 }
 
 static bool	init_pipes(t_data *data)
@@ -46,7 +45,6 @@ static bool	init_pipes(t_data *data)
 	data->pipes = ft_calloc(data->num_commands, sizeof(int *));
 	if (data->pipes == NULL)
 		return (perror("malloc"), false);
-	data->pipes[data->num_commands - 1] = NULL;
 	i = 0;
 	while (i < data->num_commands - 1)
 	{
@@ -108,8 +106,8 @@ bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 	ft_bzero(data, sizeof(t_data));
 	data->env = env;
 	if (!check_args(data, argc, argv)
-		|| !init_commands(data, argv + 2 + data->is_heredoc)
 		|| !init_path(data)
+		|| !init_commands(data, argv + 2 + data->is_heredoc)
 		|| !init_pipes(data))
 		return (false);
 	if (data->is_heredoc)
@@ -121,5 +119,7 @@ bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 	else
 		data->file_in = argv[2];
 	data->file_out = argv[argc - 1];
+	data->fd_in = STDIN_FILENO;
+	data->fd_out = STDOUT_FILENO;
 	return (true);
 }

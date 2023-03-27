@@ -22,7 +22,7 @@ def quote(s):
 
 
 def execute(command, outfile):
-    ex = subprocess.run(command, shell=True, capture_output=True)
+    ex = subprocess.run(command, shell=True, capture_output=True, timeout=3)
     stderr = "\n".join(
         sorted(
             ex.stderr.decode()

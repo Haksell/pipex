@@ -114,6 +114,7 @@ def test_yes():
     check(["yes", "wc-l"])
     check(["yes", "ls"])
     check(["yes", "ls", "wc-l"])
+    check(["yes", "rev", "ls"])
     check(["yes", "ls", "wc -l"])
     check(["yes", "head -n 10"])
 
