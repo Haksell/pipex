@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 14:28:51 by axbrisse          #+#    #+#             */
-/*   Updated: 2022/12/08 09:14:07 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:59:39 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	*ft_memcpy_reverse(void *dest, const void *src, size_t n)
 {
 	int	i;
 
-	if (dest == NULL && src == NULL)
+	if (dest == NULL || src == NULL)
 		return (NULL);
 	i = n - 1;
 	while (i >= 0)

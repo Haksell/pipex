@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 23:28:23 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 23:54:51 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,16 @@ void	clean_pipes(int **pipes)
 	}
 }
 
-void	error_filename(char const *filename)
-{
-	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
-}
-
 void	free_data(t_data *data)
 {
 	close(data->fd_in);
 	close(data->fd_out);
 	clean_pipes(data->pipes);
 	if (data->is_heredoc)
+	{
+		unlink(data->file_in);
 		free(data->file_in);
+	}
 	// ft_free_double((void ***)data->path);
 	// ft_free_triple((void ****)data->commands);
 }
