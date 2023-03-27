@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 03:17:01 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 04:05:58 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,16 +97,15 @@ static int	**init_pipes(int num_pipes)
 	pipes = ft_calloc(num_pipes + 1, sizeof(int *));
 	if (pipes == NULL)
 		return (perror("malloc"), NULL);
+	pipes[num_pipes] = NULL;
 	i = 0;
 	while (i < num_pipes)
 	{
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (pipes[i] == NULL)
-			return (clean_pipes(pipes, i), perror("malloc"), NULL);
-		pipes[i][0] = -1;
-		pipes[i][1] = -1;
+			return (clean_pipes(pipes), perror("malloc"), NULL);
 		if (pipe(pipes[i]) == -1)
-			return (clean_pipes(pipes, i + 1), perror("pipe"), NULL);
+			return (clean_pipes(pipes), perror("pipe"), NULL);
 		++i;
 	}
 	return (pipes);

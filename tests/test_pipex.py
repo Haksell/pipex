@@ -60,6 +60,7 @@ def test_random_bullshit():
     check(["abc", "def", "ghi", "jkl", "mno", "qrs", "tuv"])
     check(["ls", "rev", "tac", "rev", "tac"])
     check(["ls", "tac", "rev", "ls", "rev", "rev", "rev", "sleep 1", "sl", "ls", "rev"])
+    check(["qwertyuiop1", "qwertyuiop2", "qwertyuiop3"], infile="/", outfile="/")
     check(["echo lol", "echo mdr"], outfile="/dev/full")
     check(["env", "env"], outfile="/dev/full")
 

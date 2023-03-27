@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 03:40:58 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 04:20:56 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static int	last_exec(t_data *data, pid_t pid)
 		exit(execute(data, cmd_name));
 	}
 	ft_close(&data->fd_out);
-	clean_pipes(data->pipes, data->num_children - 1);
+	clean_pipes(data->pipes);
 	ft_free_double_pointer((void ***)&data->path, SIZE_MAX);
 	if (data->is_heredoc)
 	  	unlink(HEREDOC_FILE);
@@ -118,7 +118,7 @@ int	main(int argc, char **argv, char **env)
 	{
 		pid = fork();
 		if (pid == -1)
-			return (perror("fork"), EXIT_FAILURE);
+			return (perror("fork"), EXIT_FAILURE); // TODO free
 		if (i == data.num_children - 1)
 			return (last_exec(&data, pid));
 		pipe_exec(&data, pid, i);

@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 03:44:25 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 04:16:53 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,23 @@ bool	is_executable(char *full_path)
 	return (return_value);
 }
 
-void	clean_pipes(int **pipes, int num_pipes)
+void	clean_pipes(int **pipes)
 {
 	int	i;
 
-	i = 0;
-	while (i < num_pipes)
+	if (pipes != NULL)
 	{
-		ft_close(&pipes[i][0]);
-		ft_close(&pipes[i][1]);
-		ft_free((void **)&pipes[i]);
-		++i;
+		i = 0;
+		while (pipes[i] != NULL)
+		{
+			ft_close(&pipes[i][0]);
+			ft_close(&pipes[i][1]);
+			free(pipes[i]);
+			pipes[i] = NULL;
+			++i;
+		}
+		free(pipes);
 	}
-	ft_free_double_pointer((void ***)&pipes, num_pipes);
 }
 
 void	error_filename(char const *filename)
