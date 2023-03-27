@@ -41,7 +41,7 @@ def execute(command, outfile):
 
 
 def check(argv, *, infile="/dev/stdin", outfile="/dev/stdout"):
-    if not outfile.startswith("/dev/"):
+    if not outfile.startswith("/dev/") and not outfile.startswith("tests/infiles/"):
         try:
             os.remove(outfile)
         except FileNotFoundError:
