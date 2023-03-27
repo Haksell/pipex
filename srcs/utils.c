@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 23:54:51 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:30:24 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,6 @@ char	*find_absolute_path(char **path, char *command)
 		++i;
 	}
 	return (NULL);
-}
-
-bool	is_executable(char *full_path)
-{
-	bool	return_value;
-	int		fd;
-
-	fd = open(full_path, O_RDONLY);
-	return_value = (fd != -1
-			&& read(fd, NULL, 0) != -1
-			&& access(full_path, X_OK) != -1);
-	ft_close(&fd);
-	return (return_value);
 }
 
 void	clean_pipes(int **pipes)
@@ -82,4 +69,10 @@ void	free_data(t_data *data)
 	}
 	// ft_free_double((void ***)data->path);
 	// ft_free_triple((void ****)data->commands);
+}
+
+void	file_error(char *filename)
+{
+	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
+	exit(EXIT_FAILURE);
 }
