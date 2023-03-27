@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 08:00:44 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:14:37 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define RET_BAD_COMMAND 127
 # define RET_EXEC_FAIL 126
+# define RET_BAD_COMMAND 127
 
-# define USAGE_MANDATORY "infile cmd1 cmd2 outfile"
-# define USAGE_BONUS "(here_doc delimiter | infile) cmd1 ... cmdn outfile"
+# define USAGE_MANDATORY "Usage: %s infile cmd1 cmd2 outfile\n"
+# define USAGE_BONUS "Usage: %s (here_doc delimiter | infile) \
+cmd1 ... cmdn outfile\n"
 
 # define HEREDOC_FILE "/tmp/heredoc.tmp"
 
@@ -49,7 +50,6 @@ typedef struct s_data {
 void	clean_pipes(int **pipes, int num_pipes);
 int		error_filename(char const *filename);
 int		error_not_found(char *command);
-bool	error_usage(char *command, char *message);
 char	*find_absolute_path(char **path, char *command);
 char	**get_path(char **env);
 bool	init_pipex(t_data *data, int argc, char **argv, char **env);

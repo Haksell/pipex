@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 01:18:30 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:17:01 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,24 @@ static bool	check_args(t_data *data)
 	data->is_heredoc = (is_bonus && data->argc >= 2
 			&& ft_strcmp(data->argv[1], "here_doc") == 0);
 	data->num_children = data->argc - 3 - data->is_heredoc;
-	if (is_bonus && data->num_children < 2)
-		return (error_usage(data->argv[0], USAGE_BONUS));
-	else if (!is_bonus && data->num_children != 2)
-		return (error_usage(data->argv[0], USAGE_MANDATORY));
-	return (true);
+	if (is_bonus)
+	{
+		if (data->num_children < 2)
+		{
+			ft_dprintf(STDERR_FILENO, USAGE_BONUS, data->argv[0]);
+			return (false);
+		}
+		return (true);
+	}
+	else
+	{
+		if (data->num_children != 2)
+		{
+			ft_dprintf(STDERR_FILENO, USAGE_MANDATORY, data->argv[0]);
+			return (false);
+		}
+		return (true);
+	}
 }
 
 static void	init_heredoc(t_data *data)

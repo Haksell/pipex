@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 09:24:12 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/02/20 06:23:21 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 03:08:25 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,4 @@ int	error_not_found(char *command)
 	ft_putstr_fd(message, STDERR_FILENO);
 	free(message);
 	return (RET_BAD_COMMAND);
-}
-
-bool	error_usage(char *command, char *message)
-{
-	ft_putstr_fd("Usage: ", STDERR_FILENO);
-	ft_putstr_fd(command, STDERR_FILENO);
-	ft_putchar_fd(' ', STDERR_FILENO);
-	ft_putendl_fd(message, STDERR_FILENO);
-	return (false);
 }
