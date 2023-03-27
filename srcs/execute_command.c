@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:46:00 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:53:45 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,22 +68,25 @@ int	execute_command(t_data *data)
 	char	*full_path;
 	char	*error_message;
 	char	*error_path;
-	char	*command;
+	char	**argv;
 
-	command = data->commands[data->i][0];
-	full_path = find_absolute_path(data->path, command);
+	argv = ft_split(data->argv[data->i + 2 + data->is_heredoc], ' ');
+	if (argv == NULL)
+		return (perror("ft_split"), EXIT_FAILURE);
+	full_path = find_absolute_path(data->path, argv[0]);
 	if (full_path == NULL)
-		null_path(command, &error_message, &error_path, &return_value);
+		null_path(argv[0], &error_message, &error_path, &return_value);
 	else if (access(full_path, F_OK) != 0)
 		invalid_path(full_path, &error_message, &error_path, &return_value);
 	else
 	{
-		execve(full_path, data->commands[data->i], data->env);
+		execve(full_path, argv, data->env);
 		error_message = strerror(errno);
 		error_path = full_path;
 		return_value = RET_CANNOT_EXECUTE;
 	}
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", error_path, error_message);
 	free(full_path);
+	ft_free_double((void ***)&argv);
 	return (return_value);
 }

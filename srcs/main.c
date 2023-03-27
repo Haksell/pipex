@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:39:13 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:54:36 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static int	wait_for_execution(t_data *data)
 	int		return_value;
 	int		wstatus;
 
-	return_value = EXIT_SUCCESS;
+	free_data(data);
+	return_value = EXIT_FAILURE;
 	while (true)
 	{
 		wpid = wait(&wstatus);
@@ -79,6 +80,5 @@ int	main(int argc, char **argv, char **env)
 		}
 		++data.i;
 	}
-	free_data(&data);
 	return (wait_for_execution(&data));
 }

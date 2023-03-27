@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:30:57 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:51:48 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ end-of-file (wanted `%s')\n"
 # define USAGE_BONUS "Usage: %s (here_doc delimiter | infile) \
 cmd1 ... cmdn outfile\n"
 
-# define SPACES " \f\n\r\t\v"
-
 typedef struct s_data {
 	int		i;
 	int		num_commands;
@@ -50,9 +48,9 @@ typedef struct s_data {
 	int		**pipes;
 	char	*file_in;
 	char	*file_out;
+	char	**argv;
 	char	**env;
 	char	**path;
-	char	***commands;
 	bool	is_heredoc;
 }	t_data;
 

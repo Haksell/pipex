@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:38:18 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 00:50:33 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	free_data(t_data *data)
 		free(data->file_in);
 	}
 	// ft_free_double((void ***)data->path);
-	// ft_free_triple((void ****)data->commands);
 }
 
 void	file_error(char *filename)
