@@ -6,24 +6,24 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 04:05:58 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 05:13:13 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static bool	check_args(t_data *data)
+static bool	check_args(t_data *data, int argc, char **argv)
 {
-	const bool	is_bonus = ft_endswith(data->argv[0], "_bonus");
+	const bool	is_bonus = ft_endswith(argv[0], "_bonus");
 
-	data->is_heredoc = (is_bonus && data->argc >= 2
-			&& ft_strcmp(data->argv[1], "here_doc") == 0);
-	data->num_children = data->argc - 3 - data->is_heredoc;
+	data->is_heredoc = (is_bonus && argc >= 2
+			&& ft_strcmp(argv[1], "here_doc") == 0);
+	data->num_children = argc - 3 - data->is_heredoc;
 	if (is_bonus)
 	{
 		if (data->num_children < 2)
 		{
-			ft_dprintf(STDERR_FILENO, USAGE_BONUS, data->argv[0]);
+			ft_dprintf(STDERR_FILENO, USAGE_BONUS, argv[0]);
 			return (false);
 		}
 		return (true);
@@ -32,61 +32,11 @@ static bool	check_args(t_data *data)
 	{
 		if (data->num_children != 2)
 		{
-			ft_dprintf(STDERR_FILENO, USAGE_MANDATORY, data->argv[0]);
+			ft_dprintf(STDERR_FILENO, USAGE_MANDATORY, argv[0]);
 			return (false);
 		}
 		return (true);
 	}
-}
-
-static void	init_heredoc(t_data *data)
-{
-	const int		fd_write = open(HEREDOC_FILE,
-			O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	const char		*limiter = data->argv[2];
-	const size_t	n = ft_strlen(limiter);
-	char			*line;
-
-	if (fd_write == -1)
-		return (perror("open"));
-	while (true)
-	{
-		ft_printf("> ");
-		line = get_next_line(STDIN_FILENO);
-		if (line == NULL
-			|| !ft_strchr(line, '\n')
-			|| (ft_strncmp(line, limiter, n) == 0 && line[n] == '\n'))
-			break ;
-		ft_putstr_fd(line, fd_write);
-		ft_free((void **)&line);
-	}
-	ft_free((void **)&line);
-	close(fd_write);
-	data->fd_in = open(HEREDOC_FILE, O_RDONLY);
-	if (data->fd_in == -1)
-		perror("open");
-}
-
-static void	init_files(t_data *data)
-{
-	char		*file_in;
-	const char	*file_out = data->argv[data->argc - 1];
-
-	if (data->is_heredoc)
-		init_heredoc(data);
-	else
-	{
-		file_in = data->argv[1 + data->is_heredoc];
-		data->fd_in = open(file_in, O_RDONLY);
-		if (data->fd_in == -1)
-			error_filename(file_in);
-	}
-	if (data->is_heredoc)
-		data->fd_out = open(file_out, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	else
-		data->fd_out = open(file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (data->fd_out == -1)
-		error_filename(file_out);
 }
 
 static int	**init_pipes(int num_pipes)
@@ -113,12 +63,19 @@ static int	**init_pipes(int num_pipes)
 
 bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 {
-	data->argc = argc;
-	data->argv = argv;
-	data->env = env;
-	if (!check_args(data))
+	if (!check_args(data, argc, argv))
 		return (false);
-	init_files(data);
+	data->argv = argv + 2 + data->is_heredoc;
+	data->env = env;
+	if (data->is_heredoc)
+	{
+		data->file_in = heredoc(argv[2]);
+		if (data->file_in == NULL)
+			return (NULL);
+	}
+	else
+		data->file_in = argv[2];
+	data->file_out = argv[argc - 1];
 	data->pipes = init_pipes(data->num_children - 1);
 	if (data->pipes == NULL)
 		return (false);

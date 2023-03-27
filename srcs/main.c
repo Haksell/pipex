@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 04:20:56 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/27 05:11:18 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,14 @@ static void	pipe_exec(t_data *data, pid_t pid, int i)
 
 	if (pid == 0)
 	{
+		if (i == 0)
+			data->fd_in = open(data->file_in, O_RDONLY);
 		ft_close(&data->pipes[i][0]);
 		dup2(data->pipes[i][1], STDOUT_FILENO);
 		ft_close(&data->pipes[i][1]);
 		dup2(data->fd_in, STDIN_FILENO);
 		ft_close(&data->fd_in);
-		cmd_name = data->argv[i + 2 + data->is_heredoc];
+		cmd_name = data->argv[i];
 		exit(execute(data, cmd_name));
 	}
 	ft_close(&data->pipes[i][1]);
@@ -83,10 +85,14 @@ static int	last_exec(t_data *data, pid_t pid)
 
 	if (pid == 0)
 	{
+		if (data->is_heredoc)
+			data->fd_out = open(data->file_out, O_CREAT | O_WRONLY | O_APPEND, 0644);
+		else
+			data->fd_out = open(data->file_out, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		ft_close(&data->pipes[data->num_children - 2][1]);
 		dup2(data->pipes[data->num_children - 2][0], STDIN_FILENO);
 		dup2(data->fd_out, STDOUT_FILENO);
-		cmd_name = data->argv[data->num_children + 1 + data->is_heredoc];
+		cmd_name = data->argv[data->num_children - 1];
 		exit(execute(data, cmd_name));
 	}
 	ft_close(&data->fd_out);
