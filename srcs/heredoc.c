@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/15 00:13:10 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/27 22:06:46 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 05:52:46 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,12 @@ static bool	is_end_heredoc(char *line, char *eof)
 {
 	const size_t	length = ft_strlen(eof);
 
-	if (line == NULL)
+	if (line == NULL || ft_strchr(line, '\n') == NULL)
 	{
 		ft_dprintf(STDERR_FILENO, HEREDOC_WARNING, eof);
 		return (true);
 	}
-	return (ft_strncmp(line, eof, length) == 0
-		&& (line[length] == '\0' || line[length] == '\n'));
+	return (ft_strncmp(line, eof, length) == 0 && line[length] == '\n');
 }
 
 char	*heredoc(char *eof)
@@ -91,6 +90,6 @@ char	*heredoc(char *eof)
 		written = ft_putstr_fd(line, fd);
 		free(line);
 		if (written == -1)
-			return (perror("ft_putendl_fd"), close(fd), free(filename), NULL);
+			return (perror("ft_putstr_fd"), close(fd), free(filename), NULL);
 	}
 }

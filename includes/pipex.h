@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 05:05:11 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 05:57:59 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define HEREDOC_PROMPT "> "
 # define HEREDOC_PREFIX "/tmp/pipex_heredoc_"
 # define HEREDOC_TRIES 42
-# define HEREDOC_WARNING "pipex: warning: here-document delimited by \
+# define HEREDOC_WARNING "\npipex: warning: here-document delimited by \
 end-of-file (wanted `%s')\n"
 
 # define RET_CANNOT_EXECUTE 126
@@ -56,6 +56,8 @@ typedef struct s_data {
 }	t_data;
 
 void	clean_pipes(int ***ptr);
+void	error_command(t_data *data, char *error_message);
+void	error_file(t_data *data, char *filename);
 void	free_data(t_data *data, bool free_exec, bool free_file_in);
 void	execute_command(t_data *data);
 char	*heredoc(char *eof);

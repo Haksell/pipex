@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 05:05:33 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 05:57:20 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,6 @@ static void	invalid_path(char *full_path, char **error_message,
 		*return_value = RET_CANNOT_EXECUTE;
 	else
 		*return_value = RET_COMMAND_NOT_FOUND;
-}
-
-static void	error_command(t_data *data, char *error_message)
-{
-	perror(error_message);
-	free_data(data, true, true);
-	exit(EXIT_FAILURE);
 }
 
 void	execute_command(t_data *data)

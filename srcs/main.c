@@ -6,18 +6,11 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 05:05:47 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 05:57:26 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-static void	error_file(t_data *data, char *filename)
-{
-	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
-	free_data(data, true, true);
-	exit(EXIT_FAILURE);
-}
 
 static void	connect_pipes(t_data *data)
 {
@@ -29,7 +22,6 @@ static void	connect_pipes(t_data *data)
 		if (fd == -1)
 			error_file(data, data->file_in);
 		dup2(fd, STDIN_FILENO);
-		dup2(data->pipes[data->i][1], STDOUT_FILENO);
 		close(fd);
 	}
 	else
@@ -78,7 +70,7 @@ int	main(int argc, char **argv, char **env)
 	t_data	data;
 
 	if (!init_pipex(&data, argc, argv, env))
-		return (EXIT_FAILURE);
+		return (free_data(&data, true, true), EXIT_FAILURE);
 	while (data.i < data.num_commands)
 	{
 		data.pid = fork();
