@@ -6,13 +6,13 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 01:49:49 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:36:29 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	file_error(t_data *data, char *filename)
+static void	error_file(t_data *data, char *filename)
 {
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
 	free_data(data);
@@ -27,7 +27,7 @@ static void	connect_pipes(t_data *data)
 	{
 		fd = open(data->file_in, O_RDONLY);
 		if (fd == -1)
-			file_error(data, data->file_in);
+			error_file(data, data->file_in);
 		dup2(fd, STDIN_FILENO);
 		dup2(data->pipes[data->i][1], STDOUT_FILENO);
 		close(fd);
@@ -39,7 +39,7 @@ static void	connect_pipes(t_data *data)
 		fd = open(data->file_out,
 				O_CREAT | O_WRONLY | O_TRUNC << data->is_heredoc, 0644);
 		if (fd == -1)
-			file_error(data, data->file_out);
+			error_file(data, data->file_out);
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
@@ -47,26 +47,25 @@ static void	connect_pipes(t_data *data)
 		dup2(data->pipes[data->i][1], STDOUT_FILENO);
 }
 
-static int	wait_for_execution(pid_t pid)
+static int	wait_commands(t_data *data)
 {
 	pid_t	wpid;
-	int		return_value;
 	int		wstatus;
 
-	return_value = EXIT_FAILURE;
+	free_data(data);
 	while (true)
 	{
 		wpid = wait(&wstatus);
 		if (wpid == -1)
 			break ;
-		if (wpid != pid)
+		if (wpid != data->pid || data->return_value != EXIT_SUCCESS)
 			continue ;
 		if (WIFEXITED(wstatus))
-			return_value = WEXITSTATUS(wstatus);
+			data->return_value = WEXITSTATUS(wstatus);
 		else
-			return_value = 128 + WTERMSIG(wstatus);
+			data->return_value = 128 + WTERMSIG(wstatus);
 	}
-	return (return_value);
+	return (data->return_value);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -79,15 +78,18 @@ int	main(int argc, char **argv, char **env)
 	{
 		data.pid = fork();
 		if (data.pid == -1)
-			return (perror("fork"), EXIT_FAILURE); // break and still wait
+		{
+			data.return_value = EXIT_FAILURE;
+			perror("fork");
+			break ;
+		}
 		if (data.pid == 0)
 		{
 			connect_pipes(&data);
 			clean_pipes(data.pipes);
-			exit(execute_command(&data));
+			execute_command(&data);
 		}
 		++data.i;
 	}
-	free_data(&data);
-	return (wait_for_execution(data.pid));
+	return (wait_commands(&data));
 }

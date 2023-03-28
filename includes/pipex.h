@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 01:48:18 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:35:22 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ cmd1 ... cmdn outfile\n"
 typedef struct s_data {
 	int		i;
 	int		num_commands;
-	int		pid;
+	int		return_value;
 	int		**pipes;
 	char	*file_in;
 	char	*file_out;
@@ -52,11 +52,12 @@ typedef struct s_data {
 	char	**env;
 	char	**path;
 	bool	is_heredoc;
+	pid_t	pid;
 }	t_data;
 
 void	clean_pipes(int **pipes);
 void	free_data(t_data *data);
-int		execute_command(t_data *data);
+void	execute_command(t_data *data);
 char	*heredoc(char *eof);
 bool	init_pipex(t_data *data, int argc, char **argv, char **env);
 

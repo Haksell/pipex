@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 01:46:55 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:39:55 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,14 @@ static void	invalid_path(char *full_path, char **error_message,
 		*return_value = RET_COMMAND_NOT_FOUND;
 }
 
-int	execute_command(t_data *data)
+static void	error_command(t_data *data, char *error_message)
+{
+	perror(error_message);
+	free_data(data);
+	exit(EXIT_FAILURE);
+}
+
+void	execute_command(t_data *data)
 {
 	int		return_value;
 	char	*error_message;
@@ -75,9 +82,9 @@ int	execute_command(t_data *data)
 
 	data->argv = ft_split(data->commands[data->i], ' ');
 	if (data->argv == NULL)
-		return (perror("ft_split"), free_data(data), EXIT_FAILURE);
+		error_command(data, "ft_split");
 	if (!find_absolute_path(data, data->path, data->argv[0]))
-		return (perror("find_absolute_path"), free_data(data), EXIT_FAILURE);
+		error_command(data, "find_absolute_path");
 	if (data->full_path == NULL)
 		null_path(data->argv[0], &error_message, &error_path, &return_value);
 	else if (access(data->full_path, F_OK) != 0)
@@ -93,5 +100,5 @@ int	execute_command(t_data *data)
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", error_path, error_message);
 	free(data->full_path);
 	ft_free_double((void ***)&data->argv);
-	return (return_value);
+	exit(return_value);
 }
