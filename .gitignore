@@ -1,8 +1,0 @@
-objs
-libft/objs
-libft/libft.a
-pipex
-pipex_bonus
-tests/__pycache__
-tests/outfiles
-.nfs*

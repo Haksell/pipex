@@ -1,6 +1,0 @@
-{
-	usrbin
-	Memcheck:Leak
-	...
-	obj:/usr/bin/*
-}
