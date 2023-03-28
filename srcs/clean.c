@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 05:55:11 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 05:03:05 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 05:05:05 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	clean_pipes(int ***ptr)
 	}
 }
 
-void	free_data(t_data *data, bool free_exec)
+void	free_data(t_data *data, bool free_exec, bool free_file_in)
 {
 	clean_pipes(&data->pipes);
 	ft_free_double((void ***)&data->path);
@@ -42,6 +42,6 @@ void	free_data(t_data *data, bool free_exec)
 		free(data->full_path);
 		ft_free_double((void ***)&data->argv);
 	}
-	if (data->is_heredoc)
+	if (free_file_in && data->is_heredoc)
 		free(data->file_in);
 }

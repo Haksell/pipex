@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 05:03:45 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 05:05:47 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	error_file(t_data *data, char *filename)
 {
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
-	free_data(data, true);
+	free_data(data, true, true);
 	exit(EXIT_FAILURE);
 }
 
@@ -52,7 +52,7 @@ static int	wait_commands(t_data *data)
 	pid_t	wpid;
 	int		wstatus;
 
-	free_data(data, true);
+	free_data(data, true, false);
 	while (true)
 	{
 		wpid = wait(&wstatus);

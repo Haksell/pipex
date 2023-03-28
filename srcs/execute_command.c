@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 05:03:37 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 05:05:33 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	invalid_path(char *full_path, char **error_message,
 static void	error_command(t_data *data, char *error_message)
 {
 	perror(error_message);
-	free_data(data, true);
+	free_data(data, true, true);
 	exit(EXIT_FAILURE);
 }
 
@@ -87,13 +87,13 @@ void	execute_command(t_data *data)
 			&return_value);
 	else
 	{
-		free_data(data, false);
+		free_data(data, false, true);
 		execve(data->full_path, data->argv, data->env);
 		error_message = strerror(errno);
 		error_path = data->full_path;
 		return_value = RET_CANNOT_EXECUTE;
 	}
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", error_path, error_message);
-	free_data(data, true);
+	free_data(data, true, true);
 	exit(return_value);
 }
