@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 00:58:33 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 01:48:23 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,5 @@ bool	init_pipex(t_data *data, int argc, char **argv, char **env)
 	else
 		data->file_in = argv[1 + data->is_heredoc];
 	data->file_out = argv[argc - 1];
-	data->fd_in = STDIN_FILENO;
-	data->fd_out = STDOUT_FILENO;
 	return (true);
 }

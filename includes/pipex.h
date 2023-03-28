@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 01:14:11 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 01:48:18 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ cmd1 ... cmdn outfile\n"
 typedef struct s_data {
 	int		i;
 	int		num_commands;
-	int		fd_in;
-	int		fd_out;
 	int		pid;
 	int		**pipes;
 	char	*file_in;

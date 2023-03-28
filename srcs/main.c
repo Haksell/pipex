@@ -6,39 +6,42 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 01:17:15 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 01:49:49 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	file_error(char *filename)
+static void	file_error(t_data *data, char *filename)
 {
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", filename, strerror(errno));
+	free_data(data);
 	exit(EXIT_FAILURE);
 }
 
 static void	connect_pipes(t_data *data)
 {
+	int	fd;
+
 	if (data->i == 0)
 	{
-		data->fd_in = open(data->file_in, O_RDONLY);
-		if (data->fd_in == -1)
-			file_error(data->file_in);
-		dup2(data->fd_in, STDIN_FILENO);
+		fd = open(data->file_in, O_RDONLY);
+		if (fd == -1)
+			file_error(data, data->file_in);
+		dup2(fd, STDIN_FILENO);
 		dup2(data->pipes[data->i][1], STDOUT_FILENO);
-		ft_close(&data->fd_in);
+		close(fd);
 	}
 	else
 		dup2(data->pipes[data->i - 1][0], STDIN_FILENO);
 	if (data->i == data->num_commands - 1)
 	{
-		data->fd_out = open(data->file_out,
+		fd = open(data->file_out,
 				O_CREAT | O_WRONLY | O_TRUNC << data->is_heredoc, 0644);
-		if (data->fd_out == -1)
-			file_error(data->file_out);
-		dup2(data->fd_out, STDOUT_FILENO);
-		ft_close(&data->fd_out);
+		if (fd == -1)
+			file_error(data, data->file_out);
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
 	}
 	else
 		dup2(data->pipes[data->i][1], STDOUT_FILENO);
