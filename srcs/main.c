@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:13 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 04:36:29 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:42:39 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	main(int argc, char **argv, char **env)
 		if (data.pid == 0)
 		{
 			connect_pipes(&data);
-			clean_pipes(data.pipes);
+			clean_pipes(&data.pipes);
 			execute_command(&data);
 		}
 		++data.i;

@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:41:06 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 04:35:22 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:42:11 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_data {
 	pid_t	pid;
 }	t_data;
 
-void	clean_pipes(int **pipes);
+void	clean_pipes(int ***ptr);
 void	free_data(t_data *data);
 void	execute_command(t_data *data);
 char	*heredoc(char *eof);

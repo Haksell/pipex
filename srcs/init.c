@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 13:01:53 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 01:48:23 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:42:35 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ static bool	init_pipes(t_data *data)
 	{
 		data->pipes[i] = malloc(sizeof(int) * 2);
 		if (data->pipes[i] == NULL)
-			return (clean_pipes(data->pipes), perror("malloc"), false);
+			return (clean_pipes(&data->pipes), perror("malloc"), false);
 		if (pipe(data->pipes[i]) == -1)
-			return (clean_pipes(data->pipes), perror("pipe"), false);
+			return (clean_pipes(&data->pipes), perror("pipe"), false);
 		++i;
 	}
 	return (true);

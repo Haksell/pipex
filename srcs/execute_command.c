@@ -6,7 +6,7 @@
 /*   By: axbrisse <axbrisse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 23:08:30 by axbrisse          #+#    #+#             */
-/*   Updated: 2023/03/28 04:39:55 by axbrisse         ###   ########.fr       */
+/*   Updated: 2023/03/28 04:43:44 by axbrisse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ void	execute_command(t_data *data)
 		return_value = RET_CANNOT_EXECUTE;
 	}
 	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", error_path, error_message);
-	free(data->full_path);
-	ft_free_double((void ***)&data->argv);
+	free_data(data);
 	exit(return_value);
 }
